@@ -1,0 +1,7 @@
+{
+  "name": "fitrah-outdoors",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "npx serve public -l 10000"
+  }
+}
