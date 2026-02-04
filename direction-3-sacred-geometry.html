@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fitrah Outdoors — Journey Outside. Discover Within.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Nunito+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --midnight: #0D1B2A;
+    --navy: #1B2838;
+    --teal: #1A6B5A;
+    --teal-light: #2A9D8F;
+    --gold: #D4A853;
+    --gold-dim: rgba(212, 168, 83, 0.15);
+    --ivory: #F2EDE4;
+    --ivory-dim: rgba(242, 237, 228, 0.6);
+    --ruby: #A63D40;
+    --heading: 'Cinzel', 'Times New Roman', serif;
+    --body: 'Nunito Sans', -apple-system, sans-serif;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--body);
+    background: var(--midnight);
+    color: var(--ivory);
+    line-height: 1.7;
+    font-weight: 300;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── Geometric Pattern SVG Background ─── */
+  .geo-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' stroke='%23D4A853' stroke-width='0.5'%3E%3Cpolygon points='40,0 80,40 40,80 0,40'/%3E%3Cpolygon points='40,10 70,40 40,70 10,40'/%3E%3Cpolygon points='40,20 60,40 40,60 20,40'/%3E%3C/g%3E%3C/svg%3E");
+    background-size: 80px 80px;
+  }
+
+  .content-wrap { position: relative; z-index: 1; }
+
+  /* ─── Animations ─── */
+  .anim {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.9s ease, transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .anim.show { opacity: 1; transform: translateY(0); }
+  .anim.s1 { transition-delay: 0.12s; }
+  .anim.s2 { transition-delay: 0.24s; }
+  .anim.s3 { transition-delay: 0.36s; }
+  .anim.s4 { transition-delay: 0.48s; }
+
+  /* ─── Nav ─── */
+  .nav-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 1.3rem 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.4s;
+  }
+  .nav-bar.scrolled {
+    background: rgba(13, 27, 42, 0.95);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(212, 168, 83, 0.08);
+  }
+  .nav-bar .logo img { height: 32px; filter: brightness(10); opacity: 0.85; }
+  .nav-bar ul {
+    display: flex;
+    list-style: none;
+    align-items: center;
+    gap: 2.2rem;
+  }
+  .nav-bar a {
+    color: var(--ivory);
+    text-decoration: none;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 400;
+    opacity: 0.6;
+    transition: opacity 0.3s;
+  }
+  .nav-bar a:hover { opacity: 1; }
+  .nav-cta-btn {
+    padding: 0.5rem 1.3rem !important;
+    border: 1px solid var(--gold) !important;
+    color: var(--gold) !important;
+    opacity: 1 !important;
+    transition: all 0.3s !important;
+  }
+  .nav-cta-btn:hover { background: var(--gold) !important; color: var(--midnight) !important; }
+  .mob-menu {
+    display: none;
+    cursor: pointer;
+    width: 26px;
+    height: 18px;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .mob-menu span { height: 1.5px; background: var(--ivory); }
+
+  /* ─── Hero ─── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 6rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  /* Geometric mandala decoration */
+  .hero-mandala {
+    position: absolute;
+    width: 700px;
+    height: 700px;
+    opacity: 0.04;
+    animation: rotateSlow 120s linear infinite;
+  }
+  @keyframes rotateSlow {
+    to { transform: rotate(360deg); }
+  }
+  .hero-mandala svg {
+    width: 100%;
+    height: 100%;
+  }
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+  }
+  .hero-geo-line {
+    width: 1px;
+    height: 60px;
+    background: linear-gradient(180deg, transparent, var(--gold), transparent);
+    margin: 0 auto 2rem;
+    opacity: 0.4;
+  }
+  .hero-label {
+    font-family: var(--heading);
+    font-size: 0.65rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 2.5rem;
+  }
+  .hero-title {
+    font-family: var(--heading);
+    font-size: clamp(2.5rem, 5.5vw, 5rem);
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: 0.04em;
+    margin-bottom: 2rem;
+  }
+  .hero-title .accent { color: var(--teal-light); }
+  .hero-sub {
+    font-size: 0.95rem;
+    color: var(--ivory-dim);
+    max-width: 500px;
+    margin: 0 auto 3rem;
+    line-height: 1.8;
+  }
+  .hero-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn-primary {
+    padding: 0.85rem 2.2rem;
+    background: var(--teal);
+    color: var(--ivory);
+    text-decoration: none;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 500;
+    border: 1px solid var(--teal);
+    transition: all 0.35s;
+  }
+  .btn-primary:hover { background: var(--teal-light); border-color: var(--teal-light); }
+  .btn-outline {
+    padding: 0.85rem 2.2rem;
+    background: transparent;
+    color: var(--ivory-dim);
+    text-decoration: none;
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 400;
+    border: 1px solid rgba(242, 237, 228, 0.15);
+    transition: all 0.35s;
+  }
+  .btn-outline:hover { border-color: var(--ivory); color: var(--ivory); }
+
+  /* ─── Geometric Divider ─── */
+  .geo-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem;
+    padding: 2rem 0;
+  }
+  .geo-divider .line {
+    width: 100px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(212, 168, 83, 0.3), transparent);
+  }
+  .geo-diamond {
+    width: 10px;
+    height: 10px;
+    border: 1px solid rgba(212, 168, 83, 0.4);
+    transform: rotate(45deg);
+  }
+
+  /* ─── Programs ─── */
+  .programs {
+    padding: 6rem 3rem;
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+  .sec-head {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+  .sec-label {
+    font-family: var(--heading);
+    font-size: 0.6rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+  .sec-title {
+    font-family: var(--heading);
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    line-height: 1.3;
+  }
+
+  .prog-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+  .prog-card {
+    background: rgba(27, 40, 56, 0.6);
+    border: 1px solid rgba(212, 168, 83, 0.08);
+    overflow: hidden;
+    position: relative;
+    transition: all 0.5s ease;
+  }
+  .prog-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--teal), var(--gold), var(--teal));
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .prog-card:hover::before { opacity: 1; }
+  .prog-card:hover { border-color: rgba(212, 168, 83, 0.15); transform: translateY(-4px); }
+  .prog-img {
+    height: 280px;
+    overflow: hidden;
+    position: relative;
+  }
+  .prog-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.7) saturate(0.9);
+    transition: all 0.7s ease;
+  }
+  .prog-card:hover .prog-img img {
+    filter: brightness(0.8) saturate(1.1);
+    transform: scale(1.04);
+  }
+  .prog-img::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 40%, rgba(13, 27, 42, 0.8) 100%);
+  }
+  .prog-badge {
+    position: absolute;
+    top: 1.2rem;
+    right: 1.2rem;
+    z-index: 1;
+    padding: 0.3rem 0.7rem;
+    background: rgba(13, 27, 42, 0.6);
+    backdrop-filter: blur(8px);
+    font-family: var(--heading);
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+  .prog-body { padding: 2rem; }
+  .prog-type {
+    font-family: var(--heading);
+    font-size: 0.55rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--teal-light);
+    margin-bottom: 0.6rem;
+  }
+  .prog-name {
+    font-family: var(--heading);
+    font-size: 1.2rem;
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    line-height: 1.4;
+    margin-bottom: 0.8rem;
+  }
+  .prog-desc {
+    font-size: 0.82rem;
+    color: var(--ivory-dim);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+  .prog-link {
+    font-family: var(--heading);
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: gap 0.3s;
+  }
+  .prog-link:hover { gap: 14px; }
+  .prog-link svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 1.5; }
+
+  /* ─── Featured Image with Geometric Frame ─── */
+  .geo-image {
+    padding: 6rem 3rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .geo-frame {
+    position: relative;
+    overflow: hidden;
+  }
+  .geo-frame img {
+    width: 100%;
+    height: 450px;
+    object-fit: cover;
+    filter: brightness(0.6) saturate(0.9);
+    display: block;
+  }
+  .geo-frame-overlay {
+    position: absolute;
+    inset: 0;
+    border: 1px solid rgba(212, 168, 83, 0.2);
+    margin: 1.5rem;
+    pointer-events: none;
+  }
+  .geo-frame-overlay::before,
+  .geo-frame-overlay::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 1px solid rgba(212, 168, 83, 0.4);
+  }
+  .geo-frame-overlay::before { top: -1px; left: -1px; border-right: none; border-bottom: none; }
+  .geo-frame-overlay::after { bottom: -1px; right: -1px; border-left: none; border-top: none; }
+  .geo-frame-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 3rem;
+  }
+  .geo-frame-text blockquote {
+    font-family: var(--heading);
+    font-size: clamp(1.2rem, 2.2vw, 1.8rem);
+    font-weight: 400;
+    line-height: 1.5;
+    letter-spacing: 0.03em;
+    max-width: 600px;
+    color: var(--ivory);
+  }
+
+  /* ─── Testimonials ─── */
+  .testimonials {
+    padding: 6rem 3rem;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .testi-content {
+    position: relative;
+    padding: 3rem 2rem;
+    border: 1px solid rgba(212, 168, 83, 0.1);
+    background: rgba(27, 40, 56, 0.3);
+  }
+  .testi-content::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 2px;
+    background: linear-gradient(90deg, var(--teal), var(--gold));
+  }
+  .testi-quote {
+    font-family: var(--heading);
+    font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+    font-weight: 400;
+    line-height: 1.6;
+    letter-spacing: 0.02em;
+    margin-bottom: 2rem;
+    font-style: normal;
+  }
+  .testi-attr {
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ivory-dim);
+  }
+  .testi-attr span { color: var(--teal-light); }
+
+  /* ─── Principles ─── */
+  .principles {
+    padding: 6rem 3rem;
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+  .prin-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 4rem;
+  }
+  .prin-item {
+    text-align: center;
+    padding: 2.5rem 2rem;
+    border: 1px solid rgba(212, 168, 83, 0.06);
+    background: rgba(27, 40, 56, 0.3);
+    transition: all 0.4s;
+    position: relative;
+    overflow: hidden;
+  }
+  .prin-item::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--teal), var(--gold));
+    opacity: 0;
+    transition: opacity 0.4s;
+  }
+  .prin-item:hover { border-color: rgba(212, 168, 83, 0.12); }
+  .prin-item:hover::after { opacity: 1; }
+  .prin-geo {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 1.5rem;
+    position: relative;
+  }
+  .prin-geo svg {
+    width: 100%;
+    height: 100%;
+    stroke: var(--gold);
+    fill: none;
+    stroke-width: 0.5;
+    opacity: 0.5;
+  }
+  .prin-name {
+    font-family: var(--heading);
+    font-size: 1rem;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    margin-bottom: 0.8rem;
+  }
+  .prin-desc {
+    font-size: 0.82rem;
+    color: var(--ivory-dim);
+    line-height: 1.75;
+  }
+
+  /* ─── CTA ─── */
+  .cta {
+    padding: 8rem 3rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(26, 107, 90, 0.1) 0%, transparent 60%);
+  }
+  .cta-wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 650px;
+    margin: 0 auto;
+  }
+  .cta-title {
+    font-family: var(--heading);
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    line-height: 1.3;
+    margin-bottom: 1.5rem;
+  }
+  .cta-title .accent { color: var(--teal-light); }
+  .cta-text {
+    font-size: 0.88rem;
+    color: var(--ivory-dim);
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+  }
+
+  /* ─── Footer ─── */
+  footer {
+    padding: 4rem 3rem 2.5rem;
+    border-top: 1px solid rgba(212, 168, 83, 0.06);
+  }
+  .ft-inner {
+    max-width: 1300px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem;
+  }
+  .ft-brand img { height: 28px; filter: brightness(10); opacity: 0.5; margin-bottom: 1rem; }
+  .ft-brand p { font-size: 0.78rem; color: rgba(242, 237, 228, 0.25); line-height: 1.7; max-width: 260px; }
+  .ft-col h4 {
+    font-family: var(--heading);
+    font-size: 0.55rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+    font-weight: 400;
+  }
+  .ft-col ul { list-style: none; }
+  .ft-col li { margin-bottom: 0.65rem; }
+  .ft-col a { font-size: 0.78rem; color: rgba(242, 237, 228, 0.3); text-decoration: none; transition: color 0.3s; }
+  .ft-col a:hover { color: var(--ivory); }
+  .ft-bottom {
+    max-width: 1300px;
+    margin: 2.5rem auto 0;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(212, 168, 83, 0.04);
+    text-align: center;
+  }
+  .ft-bottom p { font-size: 0.65rem; color: rgba(242, 237, 228, 0.18); letter-spacing: 0.08em; }
+
+  /* ─── Responsive ─── */
+  @media (max-width: 1024px) {
+    .prog-grid { grid-template-columns: 1fr; }
+    .prin-grid { grid-template-columns: 1fr 1fr; }
+    .ft-inner { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 768px) {
+    .nav-bar { padding: 1rem 1.5rem; }
+    .nav-bar ul { display: none; }
+    .mob-menu { display: flex; }
+    .hero { padding: 6rem 1.5rem; }
+    .programs, .principles, .geo-image { padding: 4rem 1.5rem; }
+    .testimonials { padding: 4rem 1.5rem; }
+    .prin-grid { grid-template-columns: 1fr; }
+    .cta { padding: 5rem 1.5rem; }
+    footer { padding: 3rem 1.5rem 2rem; }
+    .ft-inner { grid-template-columns: 1fr; gap: 2rem; }
+    .geo-frame img { height: 300px; }
+    .hero-mandala { width: 400px; height: 400px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="geo-bg"></div>
+<div class="content-wrap">
+
+<!-- ═══ Nav ═══ -->
+<nav class="nav-bar">
+  <a href="#" class="logo">
+    <img src="https://images.squarespace-cdn.com/content/v1/66307c0138a4f043bfe91c4c/c4817bc1-b19b-4ae8-94d1-7439b6dfd835/Recurso+10.png" alt="Fitrah Outdoors">
+  </a>
+  <ul>
+    <li><a href="#programs">Programs</a></li>
+    <li><a href="#principles">Principles</a></li>
+    <li><a href="#people">People</a></li>
+    <li><a href="#partners">Partners</a></li>
+    <li><a href="https://instagram.com/fitrahoutdoors" target="_blank">Instagram</a></li>
+    <li><a href="#join" class="nav-cta-btn">Join Community</a></li>
+  </ul>
+  <div class="mob-menu"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- ═══ Hero ═══ -->
+<section class="hero">
+  <div class="hero-mandala">
+    <svg viewBox="0 0 400 400">
+      <g stroke="rgba(212,168,83,1)" fill="none" stroke-width="0.5" transform="translate(200,200)">
+        <polygon points="0,-180 155.9,90 -155.9,90"/>
+        <polygon points="0,180 -155.9,-90 155.9,-90"/>
+        <circle r="180"/>
+        <circle r="140"/>
+        <circle r="100"/>
+        <circle r="60"/>
+        <line x1="0" y1="-180" x2="0" y2="180"/>
+        <line x1="-155.9" y1="-90" x2="155.9" y2="90"/>
+        <line x1="-155.9" y1="90" x2="155.9" y2="-90"/>
+        <polygon points="0,-120 103.9,60 -103.9,60"/>
+        <polygon points="0,120 -103.9,-60 103.9,-60"/>
+      </g>
+    </svg>
+  </div>
+  <div class="hero-inner">
+    <div class="hero-geo-line anim"></div>
+    <div class="hero-label anim s1">Fitrah Outdoors</div>
+    <h1 class="hero-title anim s2">Journey Outside.<br><span class="accent">Discover Within.</span></h1>
+    <p class="hero-sub anim s3">Spiritually-rooted outdoor experiences where the patterns of nature reveal the sacred geometry of the soul.</p>
+    <div class="hero-actions anim s4">
+      <a href="#programs" class="btn-primary">Explore Programs</a>
+      <a href="#principles" class="btn-outline">Our Principles</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Programs ═══ -->
+<div class="geo-divider"><div class="line"></div><div class="geo-diamond"></div><div class="line"></div></div>
+
+<section class="programs" id="programs">
+  <div class="sec-head anim">
+    <div class="sec-label">Upcoming Programs</div>
+    <h2 class="sec-title">Follow the Signs</h2>
+  </div>
+  <div class="prog-grid">
+    <div class="prog-card anim s1">
+      <div class="prog-img">
+        <img src="https://images.unsplash.com/photo-1500514966906-fe245eea9344?w=800&q=80" alt="Sailing on the Bay">
+        <div class="prog-badge">Feb 14, 2026</div>
+      </div>
+      <div class="prog-body">
+        <div class="prog-type">Day Excursion</div>
+        <h3 class="prog-name">Sailing with Shukr on the S.F. Bay</h3>
+        <p class="prog-desc">Navigate the waters of the Bay with gratitude as your compass. A day of sailing, reflection, and the sacred rhythm of wind and wave.</p>
+        <a href="#" class="prog-link">Discover <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+    <div class="prog-card anim s2">
+      <div class="prog-img">
+        <img src="https://images.unsplash.com/photo-1497250681960-ef046c08a56e?w=800&q=80" alt="Nature education">
+        <div class="prog-badge">8-Week Course</div>
+      </div>
+      <div class="prog-body">
+        <div class="prog-type">Homeschool Program</div>
+        <h3 class="prog-name">The Book of Nature: Signs of the 7 Characteristics Allah Loves</h3>
+        <p class="prog-desc">Read the signs written in every leaf and stone. An immersive course exploring divine attributes through the intricate patterns of the natural world.</p>
+        <a href="#" class="prog-link">Discover <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Geometric Image ═══ -->
+<div class="geo-image">
+  <div class="geo-frame anim">
+    <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1400&q=80" alt="Mountain valley">
+    <div class="geo-frame-overlay"></div>
+    <div class="geo-frame-text">
+      <blockquote>In the creation of the heavens and the earth, and the alternation of night and day, there are signs for those of understanding.</blockquote>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ Testimonials ═══ -->
+<div class="geo-divider"><div class="line"></div><div class="geo-diamond"></div><div class="line"></div></div>
+
+<section class="testimonials" id="people">
+  <div class="sec-head anim">
+    <div class="sec-label">Reflections</div>
+    <h2 class="sec-title">Voices from the Path</h2>
+  </div>
+  <div class="testi-content anim s1">
+    <blockquote class="testi-quote">The symmetry of the forest canopy, the spiral of a fern, the rhythm of the tides — Fitrah showed me these aren't just natural phenomena. They are invitations to remember.</blockquote>
+    <p class="testi-attr">Yusuf A. — <span>Seward Park Nature Walk</span></p>
+  </div>
+</section>
+
+<!-- ═══ Principles ═══ -->
+<section class="principles" id="principles">
+  <div class="sec-head anim">
+    <div class="sec-label">Our Principles</div>
+    <h2 class="sec-title">The Pattern Behind the Path</h2>
+  </div>
+  <div class="prin-grid">
+    <div class="prin-item anim s1">
+      <div class="prin-geo">
+        <svg viewBox="0 0 50 50"><circle cx="25" cy="25" r="22"/><circle cx="25" cy="25" r="14"/><circle cx="25" cy="25" r="6"/></svg>
+      </div>
+      <h3 class="prin-name">Fitrah First</h3>
+      <p class="prin-desc">Every human carries an innate pattern — the fitrah — a sacred geometry encoded in the soul. Our journeys are designed to help you remember it.</p>
+    </div>
+    <div class="prin-item anim s2">
+      <div class="prin-geo">
+        <svg viewBox="0 0 50 50"><rect x="10" y="10" width="30" height="30" transform="rotate(45 25 25)"/><rect x="14" y="14" width="22" height="22" transform="rotate(45 25 25)"/></svg>
+      </div>
+      <h3 class="prin-name">Presence Over Performance</h3>
+      <p class="prin-desc">We collect devices and distractions. What remains is the unmediated encounter between you, creation, and the Creator.</p>
+    </div>
+    <div class="prin-item anim s3">
+      <div class="prin-geo">
+        <svg viewBox="0 0 50 50"><polygon points="25,3 47,25 25,47 3,25"/><polygon points="25,11 39,25 25,39 11,25"/></svg>
+      </div>
+      <h3 class="prin-name">The Earth as Teacher</h3>
+      <p class="prin-desc">Every mountain, stream, and constellation is an ayah — a sign. We walk the earth as students, reading the lessons written in its landscapes.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA ═══ -->
+<div class="geo-divider"><div class="line"></div><div class="geo-diamond"></div><div class="line"></div></div>
+
+<section class="cta" id="join">
+  <div class="cta-wrap anim">
+    <div class="sec-label">Join the Community</div>
+    <h2 class="cta-title">The pattern is<br><span class="accent">already within you.</span></h2>
+    <p class="cta-text">Step outside and trace its lines. Join our community for seasonal retreats, nature walks, and journeys that illuminate the sacred in the everyday.</p>
+    <a href="#" class="btn-primary">Explore Programs</a>
+  </div>
+</section>
+
+<!-- ═══ Footer ═══ -->
+<footer id="partners">
+  <div class="ft-inner">
+    <div class="ft-brand">
+      <img src="https://images.squarespace-cdn.com/content/v1/66307c0138a4f043bfe91c4c/c4817bc1-b19b-4ae8-94d1-7439b6dfd835/Recurso+10.png" alt="Fitrah Outdoors">
+      <p>Spiritually-rooted outdoor experiences where nature's patterns reveal the sacred within.</p>
+    </div>
+    <div class="ft-col">
+      <h4>Navigate</h4>
+      <ul>
+        <li><a href="#programs">Programs</a></li>
+        <li><a href="#principles">Principles</a></li>
+        <li><a href="#people">People</a></li>
+        <li><a href="#partners">Partners</a></li>
+      </ul>
+    </div>
+    <div class="ft-col">
+      <h4>Programs</h4>
+      <ul>
+        <li><a href="#">Sailing</a></li>
+        <li><a href="#">Farm Stays</a></li>
+        <li><a href="#">Horseback Riding</a></li>
+        <li><a href="#">Homeschool</a></li>
+      </ul>
+    </div>
+    <div class="ft-col">
+      <h4>Connect</h4>
+      <ul>
+        <li><a href="https://instagram.com/fitrahoutdoors" target="_blank">Instagram</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">Newsletter</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="ft-bottom">
+    <p>&copy; 2026 Fitrah Outdoors. All rights reserved.</p>
+  </div>
+</footer>
+
+</div><!-- /content-wrap -->
+
+<script>
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('show'); });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.anim').forEach(el => obs.observe(el));
+
+  const nav = document.querySelector('.nav-bar');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 60));
+</script>
+
+</body>
+</html>

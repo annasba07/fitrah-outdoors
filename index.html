@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fitrah Outdoors — Design Directions Explorer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Bricolage+Grotesque:opsz,wght@12..96,200;12..96,300;12..96,400;12..96,500;12..96,600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0E0E10;
+    --surface: #161618;
+    --surface-hover: #1C1C1F;
+    --border: #2A2A2E;
+    --border-light: #3A3A3F;
+    --text: #E8E6E3;
+    --text-dim: #8A8890;
+    --text-muted: #5A5860;
+    --accent: #C49A3C;
+    --accent-dim: rgba(196, 154, 60, 0.1);
+    --heading: 'Instrument Serif', Georgia, serif;
+    --body: 'Bricolage Grotesque', system-ui, sans-serif;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--body);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    font-weight: 300;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* ─── Subtle grid bg ─── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+      linear-gradient(rgba(196, 154, 60, 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(196, 154, 60, 0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .page { position: relative; z-index: 1; }
+
+  /* ─── Header ─── */
+  .header {
+    padding: 2.5rem 3rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(14, 14, 16, 0.9);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
+  .header-logo img {
+    height: 28px;
+    filter: brightness(10);
+    opacity: 0.6;
+  }
+  .header-divider {
+    width: 1px;
+    height: 24px;
+    background: var(--border);
+  }
+  .header-title {
+    font-family: var(--heading);
+    font-size: 1rem;
+    font-weight: 400;
+    color: var(--text-dim);
+    font-style: italic;
+  }
+  .header-meta {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+
+  /* ─── Hero ─── */
+  .hero {
+    padding: 6rem 3rem 4rem;
+    max-width: 900px;
+  }
+  .hero-label {
+    font-size: 0.58rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-label::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--accent);
+    opacity: 0.5;
+  }
+  .hero-h1 {
+    font-family: var(--heading);
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 400;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+    letter-spacing: -0.02em;
+  }
+  .hero-h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .hero-desc {
+    font-size: 0.95rem;
+    color: var(--text-dim);
+    line-height: 1.75;
+    max-width: 600px;
+  }
+
+  /* ─── View Toggle ─── */
+  .controls {
+    padding: 0 3rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .view-count {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+  .view-count span { color: var(--text-dim); font-weight: 500; }
+  .view-modes {
+    display: flex;
+    gap: 0;
+    border: 1px solid var(--border);
+  }
+  .view-btn {
+    padding: 0.45rem 1rem;
+    font-family: var(--body);
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-weight: 400;
+    border-right: 1px solid var(--border);
+  }
+  .view-btn:last-child { border-right: none; }
+  .view-btn:hover { color: var(--text); background: var(--surface); }
+  .view-btn.active { color: var(--accent); background: var(--accent-dim); }
+
+  /* ─── Gallery Grid ─── */
+  .gallery {
+    padding: 0 3rem 6rem;
+    display: grid;
+    gap: 2rem;
+    transition: all 0.4s ease;
+  }
+  .gallery.grid-2 { grid-template-columns: 1fr 1fr; }
+  .gallery.grid-1 { grid-template-columns: 1fr; }
+
+  /* ─── Card ─── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    position: relative;
+    cursor: pointer;
+  }
+  .card:hover {
+    border-color: var(--border-light);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  }
+
+  /* Preview iframe */
+  .card-preview {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+  }
+  .grid-2 .card-preview { height: 420px; }
+  .grid-1 .card-preview { height: 560px; }
+  .card-preview iframe {
+    width: 1440px;
+    height: 900px;
+    border: none;
+    pointer-events: none;
+    transform-origin: 0 0;
+  }
+  .grid-2 .card-preview iframe {
+    transform: scale(0.47);
+  }
+  .grid-1 .card-preview iframe {
+    transform: scale(0.72);
+  }
+  /* Hover overlay */
+  .card-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(14, 14, 16, 0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.4s;
+    z-index: 2;
+  }
+  .card:hover .card-overlay {
+    background: rgba(14, 14, 16, 0.5);
+  }
+  .card-overlay-btns {
+    display: flex;
+    gap: 0.8rem;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .card:hover .card-overlay-btns {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .overlay-btn {
+    padding: 0.65rem 1.4rem;
+    font-family: var(--body);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.25s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .overlay-btn.primary {
+    background: var(--accent);
+    color: var(--bg);
+    border: 1px solid var(--accent);
+  }
+  .overlay-btn.primary:hover { background: #d4aa4c; }
+  .overlay-btn.secondary {
+    background: rgba(255,255,255,0.08);
+    color: var(--text);
+    border: 1px solid rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+  }
+  .overlay-btn.secondary:hover { background: rgba(255,255,255,0.15); }
+  .overlay-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+  /* Card info */
+  .card-info {
+    padding: 1.5rem 1.8rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+  .card-number {
+    font-family: var(--heading);
+    font-size: 2rem;
+    font-style: italic;
+    color: var(--accent);
+    opacity: 0.2;
+    line-height: 1;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+  .card-text { flex: 1; }
+  .card-name {
+    font-family: var(--heading);
+    font-size: 1.15rem;
+    font-weight: 400;
+    margin-bottom: 0.4rem;
+    letter-spacing: -0.01em;
+  }
+  .card-desc {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+  }
+  .card-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+  .tag {
+    padding: 0.2rem 0.55rem;
+    font-size: 0.55rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+  .tag.accent-tag {
+    border-color: rgba(196, 154, 60, 0.2);
+    color: var(--accent);
+    background: var(--accent-dim);
+  }
+
+  /* ─── Fullscreen modal ─── */
+  .modal {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: var(--bg);
+    display: none;
+    flex-direction: column;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+  .modal.open { display: flex; }
+  .modal.visible { opacity: 1; }
+  .modal-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.8rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    flex-shrink: 0;
+  }
+  .modal-bar-left {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .modal-title {
+    font-family: var(--heading);
+    font-size: 0.95rem;
+    font-weight: 400;
+  }
+  .modal-url {
+    font-size: 0.62rem;
+    color: var(--text-muted);
+    padding: 0.25rem 0.6rem;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    font-family: monospace;
+  }
+  .modal-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  .modal-nav-btn {
+    padding: 0.4rem 0.8rem;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-family: var(--body);
+    font-size: 0.6rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .modal-nav-btn:hover { border-color: var(--border-light); color: var(--text); background: var(--surface-hover); }
+  .modal-nav-btn svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; }
+  .modal-close {
+    padding: 0.4rem 0.8rem;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    font-family: var(--body);
+    font-size: 0.6rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .modal-close:hover { border-color: #ff4444; color: #ff4444; }
+  .modal-newtab {
+    padding: 0.4rem 0.8rem;
+    background: var(--accent-dim);
+    border: 1px solid rgba(196, 154, 60, 0.2);
+    color: var(--accent);
+    font-family: var(--body);
+    font-size: 0.6rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .modal-newtab:hover { background: rgba(196, 154, 60, 0.2); }
+  .modal-newtab svg { width: 10px; height: 10px; stroke: currentColor; fill: none; stroke-width: 2; }
+  .modal-frame {
+    flex: 1;
+    overflow: hidden;
+  }
+  .modal-frame iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: #fff;
+  }
+
+  /* ─── Footer ─── */
+  .footer {
+    padding: 2rem 3rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer p {
+    font-size: 0.62rem;
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* ─── Keyboard hint ─── */
+  .kb-hints {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    z-index: 10;
+    display: flex;
+    gap: 1rem;
+    opacity: 0.4;
+    transition: opacity 0.3s;
+  }
+  .kb-hints:hover { opacity: 0.8; }
+  .kb-hint {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.58rem;
+    color: var(--text-muted);
+  }
+  .kb-key {
+    padding: 0.15rem 0.4rem;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    font-family: monospace;
+    font-size: 0.55rem;
+    color: var(--text-dim);
+    border-radius: 2px;
+  }
+
+  /* ─── Responsive ─── */
+  @media (max-width: 1024px) {
+    .gallery.grid-2 { grid-template-columns: 1fr; }
+    .grid-2 .card-preview { height: 380px; }
+    .grid-2 .card-preview iframe { transform: scale(0.42); }
+  }
+  @media (max-width: 768px) {
+    .header { padding: 1.5rem 1.5rem; flex-wrap: wrap; gap: 0.8rem; }
+    .header-divider { display: none; }
+    .hero { padding: 4rem 1.5rem 3rem; }
+    .controls { padding: 0 1.5rem 1.5rem; }
+    .gallery { padding: 0 1.5rem 4rem; grid-template-columns: 1fr !important; }
+    .grid-2 .card-preview, .grid-1 .card-preview { height: 300px; }
+    .grid-2 .card-preview iframe, .grid-1 .card-preview iframe { transform: scale(0.35); }
+    .card-info { padding: 1.2rem 1.2rem; flex-direction: column; gap: 0.5rem; }
+    .footer { padding: 1.5rem; flex-direction: column; gap: 0.5rem; text-align: center; }
+    .kb-hints { display: none; }
+    .modal-url { display: none; }
+    .modal-bar { padding: 0.6rem 1rem; flex-wrap: wrap; gap: 0.5rem; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+<!-- ═══ Header ═══ -->
+<header class="header">
+  <div class="header-left">
+    <a href="#" class="header-logo"><img src="https://images.squarespace-cdn.com/content/v1/66307c0138a4f043bfe91c4c/c4817bc1-b19b-4ae8-94d1-7439b6dfd835/Recurso+10.png" alt="Fitrah Outdoors"></a>
+    <div class="header-divider"></div>
+    <span class="header-title">Design Directions</span>
+  </div>
+  <span class="header-meta">Website Refresh — Feb 2026</span>
+</header>
+
+<!-- ═══ Hero ═══ -->
+<section class="hero">
+  <div class="hero-label">Design Exploration</div>
+  <h1 class="hero-h1">Eight directions,<br><em>one vision.</em></h1>
+  <p class="hero-desc">Explore eight distinct design directions for the Fitrah Outdoors website refresh. Each prototype is a fully responsive, self-contained page. Click any card to preview it full-screen, or open it in a new tab.</p>
+</section>
+
+<!-- ═══ Controls ═══ -->
+<div class="controls">
+  <div class="view-count"><span>8</span> design directions</div>
+  <div class="view-modes">
+    <button class="view-btn active" data-cols="2">Grid</button>
+    <button class="view-btn" data-cols="1">List</button>
+  </div>
+</div>
+
+<!-- ═══ Gallery ═══ -->
+<div class="gallery grid-2" id="gallery">
+
+  <!-- Card 1 -->
+  <div class="card" data-idx="0">
+    <div class="card-preview">
+      <iframe src="direction-1-desert-minimalism.html" loading="lazy" tabindex="-1" sandbox="allow-same-origin"></iframe>
+      <div class="card-overlay">
+        <div class="card-overlay-btns">
+          <a class="overlay-btn primary" data-action="fullscreen">
+            Preview
+            <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </a>
+          <a class="overlay-btn secondary" href="direction-1-desert-minimalism.html" target="_blank">
+            New Tab
+            <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="card-info">
+      <div class="card-number">01</div>
+      <div class="card-text">
+        <h3 class="card-name">Desert Minimalism</h3>
+        <p class="card-desc">Vast whitespace, warm sand tones, contemplative typography. Evoking the stillness of desert landscapes.</p>
+        <div class="card-tags">
+          <span class="tag accent-tag">Light Theme</span>
+          <span class="tag">Cormorant Garamond</span>
+          <span class="tag">Sand + Sienna</span>
+          <span class="tag">Minimal</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 2 -->
+  <div class="card" data-idx="1">
+    <div class="card-preview">
+      <iframe src="direction-2-lush-immersive.html" loading="lazy" tabindex="-1" sandbox="allow-same-origin"></iframe>
+      <div class="card-overlay">
+        <div class="card-overlay-btns">
+          <a class="overlay-btn primary" data-action="fullscreen">
+            Preview
+            <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </a>
+          <a class="overlay-btn secondary" href="direction-2-lush-immersive.html" target="_blank">
+            New Tab
+            <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="card-info">
+      <div class="card-number">02</div>
+      <div class="card-text">
+        <h3 class="card-name">Lush Immersive</h3>
+        <p class="card-desc">Full-bleed forest photography, deep greens, enveloping atmosphere. Like stepping into a Pacific Northwest forest.</p>
+        <div class="card-tags">
+          <span class="tag accent-tag">Dark Theme</span>
+          <span class="tag">Fraunces</span>
+          <span class="tag">Forest Green</span>
+          <span class="tag">Immersive</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 3 -->
+  <div class="card" data-idx="2">
+    <div class="card-preview">
+      <iframe src="direction-3-sacred-geometry.html" loading="lazy" tabindex="-1" sandbox="allow-same-origin"></iframe>
+      <div class="card-overlay">
+        <div class="card-overlay-btns">
+          <a class="overlay-btn primary" data-action="fullscreen">
+            Preview
+            <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </a>
+          <a class="overlay-btn secondary" href="direction-3-sacred-geometry.html" target="_blank">
+            New Tab
+            <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="card-info">
+      <div class="card-number">03</div>
+      <div class="card-text">
+        <h3 class="card-name">Sacred Geometry</h3>
+        <p class="card-desc">Islamic geometric patterns, rotating mandala, jewel tones. Honoring Islamic art tradition with modern web design.</p>
+        <div class="card-tags">
+          <span class="tag accent-tag">Dark Theme</span>
+          <span class="tag">Cinzel</span>
+          <span class="tag">Navy + Teal + Gold</span>
+          <span class="tag">Structured</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 4 -->
+  <div class="card" data-idx="3">
+    <div class="card-preview">
+      <iframe src="direction-4-expedition-journal.html" loading="lazy" tabindex="-1" sandbox="allow-same-origin"></iframe>
+      <div class="card-overlay">
+        <div class="card-overlay-btns">
+          <a class="overlay-btn primary" data-action="fullscreen">
+            Preview
+            <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </a>
+          <a class="overlay-btn secondary" href="direction-4-expedition-journal.html" target="_blank">
+            New Tab
+            <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="card-info">
+      <div class="card-number">04</div>
+      <div class="card-text">
+        <h3 class="card-name">Expedition Journal</h3>
+        <p class="card-desc">Polaroid photos, torn edges, notebook ruled lines, postcard testimonials. A personal outdoor field journal.</p>
+        <div class="card-tags">
+          <span class="tag accent-tag">Light Theme</span>
+          <span class="tag">Lora</span>
+          <span class="tag">Kraft + Olive</span>
+          <span class="tag">Tactile</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 5 -->
+  <div class="card" data-idx="4">
+    <div class="card-preview">
+      <iframe src="direction-5-celestial-night.html" loading="lazy" tabindex="-1" sandbox="allow-same-origin"></iframe>
+      <div class="card-overlay">
+        <div class="card-overlay-btns">
+          <a class="overlay-btn primary" data-action="fullscreen">
+            Preview
+            <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </a>
+          <a class="overlay-btn secondary" href="direction-5-celestial-night.html" target="_blank">
+            New Tab
+            <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="card-info">
+      <div class="card-number">05</div>
+      <div class="card-text">
+        <h3 class="card-name">Celestial Night</h3>
+        <p class="card-desc">Animated starfield, aurora gradients, luminous accents. Inspired by night sky observation and celestial navigation.</p>
+        <div class="card-tags">
+          <span class="tag accent-tag">Dark Theme</span>
+          <span class="tag">Philosopher</span>
+          <span class="tag">Aurora Blue + Teal</span>
+          <span class="tag">Atmospheric</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 6 -->
+  <div class="card" data-idx="5">
+    <div class="card-preview">
+      <iframe src="direction-6-terracotta-wabisabi.html" loading="lazy" tabindex="-1" sandbox="allow-same-origin"></iframe>
+      <div class="card-overlay">
+        <div class="card-overlay-btns">
+          <a class="overlay-btn primary" data-action="fullscreen">
+            Preview
+            <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </a>
+          <a class="overlay-btn secondary" href="direction-6-terracotta-wabisabi.html" target="_blank">
+            New Tab
+            <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="card-info">
+      <div class="card-number">06</div>
+      <div class="card-text">
+        <h3 class="card-name">Terracotta Wabi-Sabi</h3>
+        <p class="card-desc">Organic blob shapes, dashed borders, imperfect asymmetry. Hand-thrown pottery meets web design.</p>
+        <div class="card-tags">
+          <span class="tag accent-tag">Light Theme</span>
+          <span class="tag">Bodoni Moda</span>
+          <span class="tag">Clay + Indigo</span>
+          <span class="tag">Organic</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 7 -->
+  <div class="card" data-idx="6">
+    <div class="card-preview">
+      <iframe src="direction-7-brutalist-summit.html" loading="lazy" tabindex="-1" sandbox="allow-same-origin"></iframe>
+      <div class="card-overlay">
+        <div class="card-overlay-btns">
+          <a class="overlay-btn primary" data-action="fullscreen">
+            Preview
+            <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </a>
+          <a class="overlay-btn secondary" href="direction-7-brutalist-summit.html" target="_blank">
+            New Tab
+            <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="card-info">
+      <div class="card-number">07</div>
+      <div class="card-text">
+        <h3 class="card-name">Brutalist Summit</h3>
+        <p class="card-desc">Massive 13rem type, monospace UI, electric orange on black. Raw, confrontational, anti-polish as a statement.</p>
+        <div class="card-tags">
+          <span class="tag accent-tag">Dark Theme</span>
+          <span class="tag">Syne + Azeret Mono</span>
+          <span class="tag">Black + Orange</span>
+          <span class="tag">Brutalist</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 8 -->
+  <div class="card" data-idx="7">
+    <div class="card-preview">
+      <iframe src="direction-8-silk-road-editorial.html" loading="lazy" tabindex="-1" sandbox="allow-same-origin"></iframe>
+      <div class="card-overlay">
+        <div class="card-overlay-btns">
+          <a class="overlay-btn primary" data-action="fullscreen">
+            Preview
+            <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+          </a>
+          <a class="overlay-btn secondary" href="direction-8-silk-road-editorial.html" target="_blank">
+            New Tab
+            <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="card-info">
+      <div class="card-number">08</div>
+      <div class="card-text">
+        <h3 class="card-name">Silk Road Editorial</h3>
+        <p class="card-desc">Magazine masthead, multi-column text, drop caps, textile patterns. Luxury travel editorial meets Islamic art.</p>
+        <div class="card-tags">
+          <span class="tag accent-tag">Light Theme</span>
+          <span class="tag">Instrument Serif</span>
+          <span class="tag">Saffron + Indigo</span>
+          <span class="tag">Editorial</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /gallery -->
+
+<!-- ═══ Footer ═══ -->
+<div class="footer">
+  <p>Fitrah Outdoors — Website Refresh Design Exploration</p>
+  <p>8 Prototypes — Feb 2026</p>
+</div>
+
+</div><!-- /page -->
+
+<!-- ═══ Fullscreen Modal ═══ -->
+<div class="modal" id="modal">
+  <div class="modal-bar">
+    <div class="modal-bar-left">
+      <span class="modal-title" id="modal-title"></span>
+      <span class="modal-url" id="modal-url"></span>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-nav-btn" id="modal-prev">
+        <svg viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Prev
+      </button>
+      <button class="modal-nav-btn" id="modal-next">
+        Next
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+      <a class="modal-newtab" id="modal-newtab" href="#" target="_blank">
+        Open
+        <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+      </a>
+      <button class="modal-close" id="modal-close">Esc &times;</button>
+    </div>
+  </div>
+  <div class="modal-frame">
+    <iframe id="modal-iframe" src="about:blank"></iframe>
+  </div>
+</div>
+
+<!-- ═══ Keyboard hints ─── -->
+<div class="kb-hints">
+  <div class="kb-hint"><span class="kb-key">Esc</span> Close preview</div>
+  <div class="kb-hint"><span class="kb-key">&larr;</span> <span class="kb-key">&rarr;</span> Navigate</div>
+</div>
+
+<script>
+  const directions = [
+    { name: 'Desert Minimalism', file: 'direction-1-desert-minimalism.html' },
+    { name: 'Lush Immersive', file: 'direction-2-lush-immersive.html' },
+    { name: 'Sacred Geometry', file: 'direction-3-sacred-geometry.html' },
+    { name: 'Expedition Journal', file: 'direction-4-expedition-journal.html' },
+    { name: 'Celestial Night', file: 'direction-5-celestial-night.html' },
+    { name: 'Terracotta Wabi-Sabi', file: 'direction-6-terracotta-wabisabi.html' },
+    { name: 'Brutalist Summit', file: 'direction-7-brutalist-summit.html' },
+    { name: 'Silk Road Editorial', file: 'direction-8-silk-road-editorial.html' }
+  ];
+
+  let currentIdx = -1;
+  const modal = document.getElementById('modal');
+  const modalTitle = document.getElementById('modal-title');
+  const modalUrl = document.getElementById('modal-url');
+  const modalIframe = document.getElementById('modal-iframe');
+  const modalNewtab = document.getElementById('modal-newtab');
+  const gallery = document.getElementById('gallery');
+
+  function openModal(idx) {
+    currentIdx = idx;
+    const d = directions[idx];
+    modalTitle.textContent = `${String(idx + 1).padStart(2, '0')} — ${d.name}`;
+    modalUrl.textContent = d.file;
+    modalIframe.src = d.file;
+    modalNewtab.href = d.file;
+    modal.classList.add('open');
+    requestAnimationFrame(() => modal.classList.add('visible'));
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    modal.classList.remove('visible');
+    setTimeout(() => {
+      modal.classList.remove('open');
+      modalIframe.src = 'about:blank';
+    }, 350);
+    document.body.style.overflow = '';
+    currentIdx = -1;
+  }
+
+  function navigate(dir) {
+    if (currentIdx < 0) return;
+    let next = currentIdx + dir;
+    if (next < 0) next = directions.length - 1;
+    if (next >= directions.length) next = 0;
+    openModal(next);
+  }
+
+  // Card clicks
+  document.querySelectorAll('.card').forEach(card => {
+    card.addEventListener('click', (e) => {
+      if (e.target.closest('.overlay-btn.secondary')) return; // let new tab links work
+      e.preventDefault();
+      const idx = parseInt(card.dataset.idx);
+      openModal(idx);
+    });
+  });
+
+  // Modal controls
+  document.getElementById('modal-close').addEventListener('click', closeModal);
+  document.getElementById('modal-prev').addEventListener('click', () => navigate(-1));
+  document.getElementById('modal-next').addEventListener('click', () => navigate(1));
+
+  // Keyboard
+  document.addEventListener('keydown', (e) => {
+    if (currentIdx < 0) return;
+    if (e.key === 'Escape') closeModal();
+    if (e.key === 'ArrowLeft') navigate(-1);
+    if (e.key === 'ArrowRight') navigate(1);
+  });
+
+  // Close on backdrop click
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeModal();
+  });
+
+  // View toggle
+  document.querySelectorAll('.view-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const cols = btn.dataset.cols;
+      gallery.className = `gallery grid-${cols}`;
+    });
+  });
+</script>
+</body>
+</html>

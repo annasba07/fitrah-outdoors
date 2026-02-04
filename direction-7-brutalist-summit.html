@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FITRAH OUTDOORS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Azeret+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --black: #0A0A0A;
+    --white: #FFFFFF;
+    --white-off: #F2F2F2;
+    --orange: #FF6B00;
+    --orange-dim: rgba(255, 107, 0, 0.12);
+    --gray-dark: #1A1A1A;
+    --gray-mid: #666;
+    --gray-line: #222;
+    --display: 'Syne', Impact, sans-serif;
+    --mono: 'Azeret Mono', 'Courier New', monospace;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--mono);
+    background: var(--black);
+    color: var(--white);
+    line-height: 1.6;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ─── Selection ─── */
+  ::selection { background: var(--orange); color: var(--black); }
+
+  /* ─── Reveal ─── */
+  .rv { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .rv.clip { transform: none; clip-path: inset(0 0 100% 0); transition: opacity 0.8s, clip-path 0.8s cubic-bezier(0.77, 0, 0.175, 1); }
+  .rv.on { opacity: 1; transform: none; clip-path: inset(0 0 0% 0); }
+  .rv.t1 { transition-delay: 0.08s; }
+  .rv.t2 { transition-delay: 0.16s; }
+  .rv.t3 { transition-delay: 0.28s; }
+  .rv.t4 { transition-delay: 0.4s; }
+  .rv.t5 { transition-delay: 0.52s; }
+
+  /* ─── Nav ─── */
+  .topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 0.8rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--gray-line);
+    background: rgba(10, 10, 10, 0.95);
+    backdrop-filter: blur(10px);
+  }
+  .topbar-logo img { height: 24px; filter: brightness(10); opacity: 0.8; }
+  .topbar-nav {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    list-style: none;
+  }
+  .topbar-nav li {
+    border-left: 1px solid var(--gray-line);
+  }
+  .topbar-nav a {
+    display: block;
+    padding: 0.5rem 1.2rem;
+    color: var(--gray-mid);
+    text-decoration: none;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 400;
+    transition: all 0.2s;
+  }
+  .topbar-nav a:hover { color: var(--white); background: var(--gray-dark); }
+  .topbar-nav .nav-hot a {
+    color: var(--orange);
+    background: var(--orange-dim);
+  }
+  .topbar-nav .nav-hot a:hover {
+    background: var(--orange);
+    color: var(--black);
+  }
+  .m-toggle {
+    display: none;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--orange);
+    cursor: pointer;
+    background: none;
+    border: 1px solid var(--gray-line);
+    padding: 0.4rem 0.8rem;
+  }
+
+  /* ─── Hero ─── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 1.5rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+  }
+  .hero-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.2) contrast(1.3) grayscale(0.6);
+  }
+  .hero-bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(10,10,10,0.4) 0%, rgba(10,10,10,0.95) 80%);
+  }
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 100%;
+  }
+  .hero-counter {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    color: var(--orange);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .hero-counter::before {
+    content: '';
+    width: 40px;
+    height: 1px;
+    background: var(--orange);
+  }
+  /* MASSIVE title */
+  .hero-mega {
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(4rem, 12vw, 13rem);
+    line-height: 0.88;
+    letter-spacing: -0.04em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+  }
+  .hero-mega .stroke-text {
+    -webkit-text-stroke: 1.5px var(--white);
+    color: transparent;
+  }
+  .hero-mega .accent { color: var(--orange); }
+  .hero-desc {
+    max-width: 480px;
+    font-size: 0.8rem;
+    color: var(--gray-mid);
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+    letter-spacing: 0.02em;
+  }
+  .hero-actions { display: flex; gap: 0; }
+  .btn-brutal {
+    padding: 0.8rem 1.8rem;
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    font-weight: 500;
+    border: 2px solid var(--white);
+    color: var(--white);
+    background: transparent;
+    transition: all 0.2s;
+    display: inline-block;
+  }
+  .btn-brutal:hover { background: var(--white); color: var(--black); }
+  .btn-brutal.fill {
+    background: var(--orange);
+    border-color: var(--orange);
+    color: var(--black);
+  }
+  .btn-brutal.fill:hover { background: #ff8533; border-color: #ff8533; }
+  .hero-coord {
+    position: absolute;
+    top: 50%;
+    right: 1.5rem;
+    z-index: 1;
+    font-family: var(--mono);
+    font-size: 0.55rem;
+    color: var(--gray-mid);
+    writing-mode: vertical-rl;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.4;
+  }
+
+  /* ─── Ticker Strip ─── */
+  .ticker {
+    overflow: hidden;
+    border-top: 1px solid var(--gray-line);
+    border-bottom: 1px solid var(--gray-line);
+    padding: 0.7rem 0;
+    background: var(--gray-dark);
+  }
+  .ticker-track {
+    display: flex;
+    gap: 4rem;
+    animation: tickerScroll 30s linear infinite;
+    white-space: nowrap;
+    width: max-content;
+  }
+  @keyframes tickerScroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .ticker-item {
+    font-family: var(--display);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gray-mid);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .ticker-item .dot {
+    width: 4px;
+    height: 4px;
+    background: var(--orange);
+  }
+
+  /* ─── Programs — Catalog style ─── */
+  .catalog {
+    padding: 4rem 1.5rem;
+  }
+  .catalog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-bottom: 1.5rem;
+    border-bottom: 2px solid var(--white);
+    margin-bottom: 0;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .cat-label {
+    font-family: var(--mono);
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 0.4rem;
+  }
+  .cat-title {
+    font-family: var(--display);
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+  .cat-count {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    color: var(--gray-mid);
+    letter-spacing: 0.1em;
+  }
+
+  /* Catalog entries — raw horizontal strips */
+  .cat-entry {
+    display: grid;
+    grid-template-columns: 80px 1fr 1.2fr auto;
+    gap: 2rem;
+    align-items: center;
+    padding: 2rem 0;
+    border-bottom: 1px solid var(--gray-line);
+    transition: background 0.3s;
+    cursor: pointer;
+  }
+  .cat-entry:hover { background: var(--gray-dark); padding-left: 1rem; padding-right: 1rem; }
+  .cat-num {
+    font-family: var(--display);
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: var(--gray-line);
+    line-height: 1;
+    letter-spacing: -0.02em;
+    transition: color 0.3s;
+  }
+  .cat-entry:hover .cat-num { color: var(--orange); }
+  .cat-meta {}
+  .cat-type {
+    font-size: 0.55rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 0.3rem;
+    font-weight: 500;
+  }
+  .cat-name {
+    font-family: var(--display);
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 1.25;
+  }
+  .cat-desc {
+    font-size: 0.75rem;
+    color: var(--gray-mid);
+    line-height: 1.65;
+    max-width: 400px;
+  }
+  .cat-date {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gray-mid);
+    text-align: right;
+    white-space: nowrap;
+  }
+  .cat-date .highlight {
+    display: block;
+    color: var(--white);
+    font-weight: 500;
+  }
+
+  /* ─── Split Image + Quote ─── */
+  .split {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 60vh;
+  }
+  .split-img {
+    overflow: hidden;
+    position: relative;
+  }
+  .split-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.5) contrast(1.2) grayscale(0.4);
+    transition: filter 0.6s;
+  }
+  .split-img:hover img { filter: brightness(0.6) contrast(1.1) grayscale(0.2); }
+  .split-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 4rem 3rem;
+    background: var(--gray-dark);
+    border-left: 3px solid var(--orange);
+  }
+  .split-text .cat-label { margin-bottom: 1.5rem; }
+  .split-quote {
+    font-family: var(--display);
+    font-size: clamp(1.3rem, 2.5vw, 2rem);
+    font-weight: 600;
+    line-height: 1.35;
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    margin-bottom: 2rem;
+  }
+  .split-quote em {
+    font-style: normal;
+    color: var(--orange);
+  }
+  .split-attr {
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gray-mid);
+  }
+  .split-attr span { color: var(--orange); }
+
+  /* ─── Principles — Stacked blocks ─── */
+  .blocks {
+    padding: 4rem 1.5rem;
+    border-top: 2px solid var(--white);
+  }
+  .blocks-head {
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--gray-line);
+    margin-bottom: 0;
+  }
+  .block-row {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    gap: 2rem;
+    align-items: start;
+    padding: 2.5rem 0;
+    border-bottom: 1px solid var(--gray-line);
+  }
+  .block-idx {
+    font-family: var(--display);
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--gray-line);
+    line-height: 1;
+  }
+  .block-name {
+    font-family: var(--display);
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    margin-bottom: 0.6rem;
+  }
+  .block-text {
+    font-size: 0.78rem;
+    color: var(--gray-mid);
+    line-height: 1.7;
+    max-width: 600px;
+  }
+
+  /* ─── CTA ─── */
+  .cta-block {
+    padding: 6rem 1.5rem;
+    text-align: center;
+    background: var(--gray-dark);
+    border-top: 3px solid var(--orange);
+    position: relative;
+  }
+  .cta-block::before {
+    content: 'JOIN';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: var(--display);
+    font-size: 20vw;
+    font-weight: 800;
+    color: rgba(255, 107, 0, 0.03);
+    text-transform: uppercase;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  .cta-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .cta-inner .cat-label { margin-bottom: 1.5rem; }
+  .cta-h2 {
+    font-family: var(--display);
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin-bottom: 1.2rem;
+  }
+  .cta-h2 .accent { color: var(--orange); }
+  .cta-p {
+    font-size: 0.78rem;
+    color: var(--gray-mid);
+    line-height: 1.7;
+    margin-bottom: 2.5rem;
+  }
+
+  /* ─── Footer ─── */
+  footer {
+    padding: 2rem 1.5rem;
+    border-top: 1px solid var(--gray-line);
+  }
+  .ft-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 2rem;
+  }
+  .ft-brand img { height: 22px; filter: brightness(10); opacity: 0.3; margin-bottom: 0.8rem; }
+  .ft-brand p { font-size: 0.65rem; color: var(--gray-mid); line-height: 1.6; max-width: 220px; opacity: 0.5; }
+  .ft-col h4 { font-family: var(--display); font-size: 0.6rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--orange); margin-bottom: 0.8rem; opacity: 0.6; }
+  .ft-col ul { list-style: none; }
+  .ft-col li { margin-bottom: 0.4rem; }
+  .ft-col a { font-size: 0.65rem; color: rgba(255,255,255,0.2); text-decoration: none; transition: color 0.2s; }
+  .ft-col a:hover { color: var(--white); }
+  .ft-end { margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--gray-line); display: flex; justify-content: space-between; align-items: center; }
+  .ft-end p { font-size: 0.55rem; color: rgba(255,255,255,0.1); letter-spacing: 0.08em; text-transform: uppercase; }
+
+  /* ─── Responsive ─── */
+  @media (max-width: 1024px) {
+    .cat-entry { grid-template-columns: 60px 1fr auto; }
+    .cat-desc { display: none; }
+    .split { grid-template-columns: 1fr; }
+    .split-text { border-left: none; border-top: 3px solid var(--orange); }
+    .ft-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 768px) {
+    .topbar-nav { display: none; }
+    .m-toggle { display: block; }
+    .hero { padding: 0 1rem 3rem; }
+    .hero-mega { font-size: clamp(3rem, 14vw, 7rem); }
+    .catalog { padding: 3rem 1rem; }
+    .cat-entry { grid-template-columns: 1fr; gap: 0.8rem; padding: 1.5rem 0; }
+    .cat-num { font-size: 1.5rem; }
+    .cat-date { text-align: left; }
+    .blocks { padding: 3rem 1rem; }
+    .block-row { grid-template-columns: 1fr; gap: 0.8rem; }
+    .split-text { padding: 2.5rem 1.5rem; }
+    .cta-block { padding: 4rem 1rem; }
+    .ft-grid { grid-template-columns: 1fr; }
+    .ft-end { flex-direction: column; gap: 0.5rem; }
+    .hero-coord { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ Nav ═══ -->
+<header class="topbar">
+  <a href="#" class="topbar-logo"><img src="https://images.squarespace-cdn.com/content/v1/66307c0138a4f043bfe91c4c/c4817bc1-b19b-4ae8-94d1-7439b6dfd835/Recurso+10.png" alt="Fitrah Outdoors"></a>
+  <ul class="topbar-nav">
+    <li><a href="#programs">Programs</a></li>
+    <li><a href="#principles">Principles</a></li>
+    <li><a href="#people">People</a></li>
+    <li><a href="https://instagram.com/fitrahoutdoors" target="_blank">Instagram</a></li>
+    <li class="nav-hot"><a href="#join">Join</a></li>
+  </ul>
+  <button class="m-toggle">Menu</button>
+</header>
+
+<!-- ═══ Hero ═══ -->
+<section class="hero">
+  <div class="hero-bg">
+    <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1600&q=80" alt="Mountain summit">
+  </div>
+  <div class="hero-content">
+    <div class="hero-counter rv on">001 — Est. 2024</div>
+    <h1 class="hero-mega">
+      <span class="rv clip t1 on">Journey</span><br>
+      <span class="stroke-text rv clip t2 on">Outside.</span><br>
+      <span class="accent rv clip t3 on">Discover</span><br>
+      <span class="rv clip t4 on">Within.</span>
+    </h1>
+    <p class="hero-desc rv t4 on">Spiritually-rooted outdoor programs that strip away the noise. No phones. No performance. Just earth, community, and the raw encounter with creation.</p>
+    <div class="hero-actions rv t5 on">
+      <a href="#programs" class="btn-brutal fill">Catalog →</a>
+      <a href="#principles" class="btn-brutal">Principles</a>
+    </div>
+  </div>
+  <div class="hero-coord">47.6062° N, 122.3321° W — Pacific Northwest</div>
+</section>
+
+<!-- ═══ Ticker ═══ -->
+<div class="ticker">
+  <div class="ticker-track">
+    <span class="ticker-item"><span class="dot"></span>Sailing</span>
+    <span class="ticker-item"><span class="dot"></span>Farm Stays</span>
+    <span class="ticker-item"><span class="dot"></span>Horseback Riding</span>
+    <span class="ticker-item"><span class="dot"></span>Nature Walks</span>
+    <span class="ticker-item"><span class="dot"></span>Homeschool</span>
+    <span class="ticker-item"><span class="dot"></span>Retreats</span>
+    <span class="ticker-item"><span class="dot"></span>Sailing</span>
+    <span class="ticker-item"><span class="dot"></span>Farm Stays</span>
+    <span class="ticker-item"><span class="dot"></span>Horseback Riding</span>
+    <span class="ticker-item"><span class="dot"></span>Nature Walks</span>
+    <span class="ticker-item"><span class="dot"></span>Homeschool</span>
+    <span class="ticker-item"><span class="dot"></span>Retreats</span>
+  </div>
+</div>
+
+<!-- ═══ Programs Catalog ═══ -->
+<section class="catalog" id="programs">
+  <div class="catalog-header rv">
+    <div>
+      <div class="cat-label">Programs / 2026</div>
+      <h2 class="cat-title">Catalog</h2>
+    </div>
+    <div class="cat-count">Showing 02 of 06</div>
+  </div>
+  <div class="cat-entry rv t1">
+    <div class="cat-num">01</div>
+    <div class="cat-meta">
+      <div class="cat-type">Day Excursion</div>
+      <h3 class="cat-name">Sailing with Shukr on the S.F. Bay</h3>
+    </div>
+    <div class="cat-desc">Gratitude on open water. Spend a full day sailing the Bay — wind, waves, and the vast silence between them.</div>
+    <div class="cat-date"><span class="highlight">Feb 14</span>2026</div>
+  </div>
+  <div class="cat-entry rv t2">
+    <div class="cat-num">02</div>
+    <div class="cat-meta">
+      <div class="cat-type">Homeschool / 8-Week</div>
+      <h3 class="cat-name">The Book of Nature: Signs of the 7 Characteristics Allah Loves</h3>
+    </div>
+    <div class="cat-desc">Nature as curriculum. Trace divine attributes through ecosystems, seasons, and the raw material of the earth.</div>
+    <div class="cat-date"><span class="highlight">Ongoing</span>2026</div>
+  </div>
+</section>
+
+<!-- ═══ Split ═══ -->
+<div class="split" id="people">
+  <div class="split-img">
+    <img src="https://images.unsplash.com/photo-1501555088652-021faa106b9b?w=900&q=80" alt="Hiking">
+  </div>
+  <div class="split-text">
+    <div class="cat-label rv">Testimonial</div>
+    <blockquote class="split-quote rv t1">They took our phones and gave us back <em>our attention.</em> I didn't know how badly I needed that until I stood in silence and heard my own heartbeat.</blockquote>
+    <p class="split-attr rv t2">Amira S. — <span>Leavenworth Horseback</span></p>
+  </div>
+</div>
+
+<!-- ═══ Principles ═══ -->
+<section class="blocks" id="principles">
+  <div class="blocks-head rv">
+    <div class="cat-label">Principles</div>
+    <h2 class="cat-title">Non-negotiables</h2>
+  </div>
+  <div class="block-row rv t1">
+    <div class="block-idx">01</div>
+    <div>
+      <h3 class="block-name">Fitrah First</h3>
+      <p class="block-text">Strip it back. Before the title, the brand, the curated identity — there's the fitrah. The raw original. Every program starts there.</p>
+    </div>
+  </div>
+  <div class="block-row rv t2">
+    <div class="block-idx">02</div>
+    <div>
+      <h3 class="block-name">Presence Over Performance</h3>
+      <p class="block-text">Phones collected at the gate. No content creation. No optimization. You show up, you're present, you leave different. That's it.</p>
+    </div>
+  </div>
+  <div class="block-row rv t3">
+    <div class="block-idx">03</div>
+    <div>
+      <h3 class="block-name">The Earth as Teacher</h3>
+      <p class="block-text">The mountain doesn't care about your LinkedIn. The river has no algorithm. The earth teaches the lessons no human institution can — patience, surrender, awe.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA ═══ -->
+<section class="cta-block" id="join">
+  <div class="cta-inner rv">
+    <div class="cat-label">Open Enrollment</div>
+    <h2 class="cta-h2">Stop scrolling.<br><span class="accent">Start walking.</span></h2>
+    <p class="cta-p">The trail doesn't wait. Neither does the soul. Join the community for seasonal programs that trade screens for summits.</p>
+    <a href="#" class="btn-brutal fill">Explore Programs →</a>
+  </div>
+</section>
+
+<!-- ═══ Footer ═══ -->
+<footer>
+  <div class="ft-grid">
+    <div class="ft-brand">
+      <img src="https://images.squarespace-cdn.com/content/v1/66307c0138a4f043bfe91c4c/c4817bc1-b19b-4ae8-94d1-7439b6dfd835/Recurso+10.png" alt="Fitrah Outdoors">
+      <p>Spiritually-rooted outdoor programs. No phones. No performance. Just earth, community, and creation.</p>
+    </div>
+    <div class="ft-col"><h4>Navigate</h4><ul><li><a href="#programs">Programs</a></li><li><a href="#principles">Principles</a></li><li><a href="#people">People</a></li></ul></div>
+    <div class="ft-col"><h4>Programs</h4><ul><li><a href="#">Sailing</a></li><li><a href="#">Farm Stays</a></li><li><a href="#">Horseback</a></li><li><a href="#">Homeschool</a></li></ul></div>
+    <div class="ft-col"><h4>Connect</h4><ul><li><a href="https://instagram.com/fitrahoutdoors" target="_blank">Instagram</a></li><li><a href="#">Contact</a></li></ul></div>
+  </div>
+  <div class="ft-end">
+    <p>&copy; 2026 Fitrah Outdoors</p>
+    <p>47.6062° N, 122.3321° W</p>
+  </div>
+</footer>
+
+<script>
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
+  }, { threshold: 0.05, rootMargin: '0px 0px -30px 0px' });
+  document.querySelectorAll('.rv').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
