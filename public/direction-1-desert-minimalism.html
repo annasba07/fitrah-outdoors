@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fitrah Outdoors — Journey Outside. Discover Within.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --sand: #E8DCC8;
+    --sand-light: #F0E8D8;
+    --sienna: #C4663A;
+    --white: #FAF7F2;
+    --charcoal: #2C2825;
+    --gold: #B89B6A;
+    --gold-light: #D4BC8E;
+    --warm-gray: #A89E91;
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans: 'DM Sans', -apple-system, sans-serif;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--white);
+    color: var(--charcoal);
+    line-height: 1.7;
+    font-weight: 300;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── Reveal Animations ─── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1), transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .reveal-delay-1 { transition-delay: 0.15s; }
+  .reveal-delay-2 { transition-delay: 0.3s; }
+  .reveal-delay-3 { transition-delay: 0.45s; }
+  .reveal-delay-4 { transition-delay: 0.6s; }
+
+  /* ─── Navigation ─── */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 1.5rem 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: rgba(250, 247, 242, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(184, 155, 106, 0.1);
+    transition: all 0.5s ease;
+  }
+  nav.scrolled {
+    padding: 1rem 3rem;
+    box-shadow: 0 1px 30px rgba(44, 40, 37, 0.04);
+  }
+  .nav-logo img {
+    height: 36px;
+    width: auto;
+    opacity: 0.9;
+    transition: opacity 0.3s;
+  }
+  .nav-logo img:hover { opacity: 1; }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    list-style: none;
+  }
+  .nav-links a {
+    text-decoration: none;
+    color: var(--charcoal);
+    font-size: 0.8rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 400;
+    position: relative;
+    padding-bottom: 2px;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--sienna);
+    transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .nav-links a:hover::after { width: 100%; }
+  .nav-cta {
+    font-size: 0.75rem !important;
+    letter-spacing: 0.15em !important;
+    border: 1px solid var(--charcoal);
+    padding: 0.6rem 1.4rem;
+    transition: all 0.4s ease;
+  }
+  .nav-cta:hover {
+    background: var(--charcoal);
+    color: var(--white) !important;
+  }
+  .nav-cta::after { display: none !important; }
+
+  .mobile-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    padding: 4px;
+  }
+  .mobile-toggle span {
+    width: 24px;
+    height: 1.5px;
+    background: var(--charcoal);
+    transition: all 0.3s ease;
+  }
+
+  /* ─── Hero ─── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 0 3rem;
+    background: linear-gradient(175deg, var(--white) 0%, var(--sand-light) 50%, var(--sand) 100%);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50%;
+    height: 100%;
+    background: radial-gradient(ellipse at 80% 40%, rgba(196, 102, 58, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    padding-top: 6rem;
+  }
+  .hero-eyebrow {
+    font-family: var(--sans);
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 4rem;
+    font-weight: 500;
+  }
+  .hero-title {
+    font-family: var(--serif);
+    font-weight: 300;
+    color: var(--charcoal);
+    line-height: 1.05;
+  }
+  .hero-line-1 {
+    font-size: clamp(3.5rem, 8vw, 8rem);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  .hero-line-2 {
+    font-size: clamp(3.5rem, 8vw, 8rem);
+    display: block;
+    padding-left: clamp(2rem, 8vw, 10rem);
+    color: var(--sienna);
+    font-style: italic;
+    font-weight: 300;
+  }
+  .hero-sub {
+    margin-top: 4rem;
+    padding-left: clamp(2rem, 8vw, 10rem);
+    max-width: 480px;
+  }
+  .hero-sub p {
+    font-size: 0.95rem;
+    color: var(--warm-gray);
+    line-height: 1.8;
+    letter-spacing: 0.01em;
+  }
+  .hero-divider {
+    width: 60px;
+    height: 1px;
+    background: var(--gold);
+    margin-top: 6rem;
+    opacity: 0.5;
+  }
+  .hero-scroll {
+    position: absolute;
+    bottom: 2.5rem;
+    right: 3rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--warm-gray);
+    writing-mode: vertical-rl;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-scroll::before {
+    content: '';
+    width: 1px;
+    height: 40px;
+    background: var(--gold);
+    opacity: 0.4;
+    animation: scrollPulse 2s ease-in-out infinite;
+  }
+  @keyframes scrollPulse {
+    0%, 100% { opacity: 0.2; transform: scaleY(0.6); }
+    50% { opacity: 0.6; transform: scaleY(1); }
+  }
+
+  /* ─── Thin Rule Divider ─── */
+  .section-rule {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 3rem;
+  }
+  .section-rule hr {
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+    opacity: 0.3;
+  }
+
+  /* ─── Programs Section ─── */
+  .programs {
+    padding: 8rem 3rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 5rem;
+    flex-wrap: wrap;
+    gap: 2rem;
+  }
+  .section-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-weight: 500;
+    margin-bottom: 1.2rem;
+  }
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(2.2rem, 4vw, 3.5rem);
+    font-weight: 300;
+    line-height: 1.2;
+    color: var(--charcoal);
+  }
+  .section-link {
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--sienna);
+    text-decoration: none;
+    border-bottom: 1px solid var(--sienna);
+    padding-bottom: 3px;
+    transition: all 0.3s;
+    font-weight: 400;
+  }
+  .section-link:hover { opacity: 0.6; }
+
+  .program-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+  .program-card {
+    position: relative;
+    overflow: hidden;
+    background: var(--sand-light);
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .program-card:hover { transform: translateY(-4px); }
+  .program-image {
+    width: 100%;
+    height: 360px;
+    object-fit: cover;
+    display: block;
+    filter: saturate(0.85);
+    transition: filter 0.6s, transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .program-card:hover .program-image {
+    filter: saturate(1);
+    transform: scale(1.03);
+  }
+  .program-image-wrap {
+    overflow: hidden;
+    position: relative;
+  }
+  .program-date {
+    position: absolute;
+    top: 1.5rem;
+    left: 1.5rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--white);
+    background: rgba(44, 40, 37, 0.5);
+    backdrop-filter: blur(8px);
+    padding: 0.4rem 0.8rem;
+    font-weight: 400;
+  }
+  .program-body {
+    padding: 2rem 2rem 2.5rem;
+  }
+  .program-tag {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--sienna);
+    margin-bottom: 0.8rem;
+    font-weight: 500;
+  }
+  .program-name {
+    font-family: var(--serif);
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1.35;
+    color: var(--charcoal);
+    margin-bottom: 1rem;
+  }
+  .program-desc {
+    font-size: 0.85rem;
+    color: var(--warm-gray);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+  .program-cta {
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--charcoal);
+    text-decoration: none;
+    font-weight: 400;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: gap 0.3s ease;
+  }
+  .program-cta:hover { gap: 14px; }
+  .program-cta svg {
+    width: 16px;
+    height: 16px;
+    stroke: var(--sienna);
+    stroke-width: 1.5;
+    fill: none;
+  }
+
+  /* ─── Testimonial Section ─── */
+  .testimonial-section {
+    padding: 8rem 3rem;
+    background: linear-gradient(180deg, var(--white) 0%, var(--sand-light) 100%);
+  }
+  .testimonial-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 6rem;
+    align-items: center;
+  }
+  .testimonial-left .section-label { margin-bottom: 1.5rem; }
+  .testimonial-left .section-title { margin-bottom: 2rem; }
+  .testimonial-left p {
+    font-size: 0.9rem;
+    color: var(--warm-gray);
+    line-height: 1.8;
+  }
+  .testimonial-quote {
+    position: relative;
+    padding-left: 3rem;
+    border-left: 1px solid var(--gold-light);
+  }
+  .testimonial-mark {
+    font-family: var(--serif);
+    font-size: 6rem;
+    color: var(--sand);
+    position: absolute;
+    top: -2rem;
+    left: 1rem;
+    line-height: 1;
+    user-select: none;
+  }
+  .testimonial-text {
+    font-family: var(--serif);
+    font-size: clamp(1.3rem, 2.2vw, 1.8rem);
+    font-weight: 300;
+    line-height: 1.6;
+    color: var(--charcoal);
+    font-style: italic;
+    margin-bottom: 2rem;
+  }
+  .testimonial-author {
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--warm-gray);
+    font-weight: 400;
+  }
+  .testimonial-author span {
+    color: var(--sienna);
+  }
+  .testimonial-dots {
+    display: flex;
+    gap: 8px;
+    margin-top: 2.5rem;
+  }
+  .testimonial-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--sand);
+    transition: all 0.3s;
+    cursor: pointer;
+  }
+  .testimonial-dot.active {
+    background: var(--sienna);
+    width: 20px;
+    border-radius: 3px;
+  }
+
+  /* ─── Principles Section ─── */
+  .principles {
+    padding: 8rem 3rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .principles-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3rem;
+    margin-top: 5rem;
+  }
+  .principle-card {
+    padding: 2.5rem 0;
+    border-top: 1px solid rgba(184, 155, 106, 0.2);
+  }
+  .principle-num {
+    font-family: var(--serif);
+    font-size: 2.5rem;
+    color: var(--sand);
+    font-weight: 300;
+    margin-bottom: 1.5rem;
+  }
+  .principle-title {
+    font-family: var(--serif);
+    font-size: 1.3rem;
+    font-weight: 400;
+    color: var(--charcoal);
+    margin-bottom: 1rem;
+    line-height: 1.3;
+  }
+  .principle-text {
+    font-size: 0.85rem;
+    color: var(--warm-gray);
+    line-height: 1.8;
+  }
+
+  /* ─── Image Break ─── */
+  .image-break {
+    width: 100%;
+    height: 50vh;
+    min-height: 400px;
+    position: relative;
+    overflow: hidden;
+  }
+  .image-break img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.7) brightness(0.95);
+  }
+  .image-break-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(250, 247, 242, 0.2) 0%, rgba(232, 220, 200, 0.3) 100%);
+  }
+  .image-break-text {
+    position: absolute;
+    bottom: 3rem;
+    left: 3rem;
+    font-family: var(--serif);
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    color: var(--white);
+    font-weight: 300;
+    font-style: italic;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.2);
+  }
+
+  /* ─── Join / CTA Section ─── */
+  .join-section {
+    padding: 10rem 3rem;
+    text-align: center;
+    background: var(--charcoal);
+    position: relative;
+    overflow: hidden;
+  }
+  .join-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 30%, rgba(196, 102, 58, 0.1) 0%, transparent 60%);
+  }
+  .join-inner {
+    max-width: 700px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+  .join-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 2rem;
+    font-weight: 500;
+  }
+  .join-title {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 300;
+    color: var(--white);
+    line-height: 1.25;
+    margin-bottom: 1.5rem;
+  }
+  .join-text {
+    font-size: 0.9rem;
+    color: rgba(250, 247, 242, 0.5);
+    line-height: 1.8;
+    margin-bottom: 3rem;
+  }
+  .join-btn {
+    display: inline-block;
+    padding: 1rem 2.8rem;
+    border: 1px solid var(--gold);
+    color: var(--white);
+    text-decoration: none;
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 400;
+    transition: all 0.4s ease;
+  }
+  .join-btn:hover {
+    background: var(--gold);
+    color: var(--charcoal);
+  }
+
+  /* ─── Footer ─── */
+  footer {
+    padding: 4rem 3rem 3rem;
+    background: var(--charcoal);
+    border-top: 1px solid rgba(184, 155, 106, 0.1);
+  }
+  .footer-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 3rem;
+  }
+  .footer-brand img {
+    height: 30px;
+    width: auto;
+    filter: brightness(10);
+    opacity: 0.7;
+    margin-bottom: 1.5rem;
+  }
+  .footer-brand p {
+    font-size: 0.8rem;
+    color: rgba(250, 247, 242, 0.35);
+    line-height: 1.7;
+    max-width: 280px;
+  }
+  .footer-col h4 {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+  }
+  .footer-col ul { list-style: none; }
+  .footer-col li { margin-bottom: 0.8rem; }
+  .footer-col a {
+    font-size: 0.82rem;
+    color: rgba(250, 247, 242, 0.4);
+    text-decoration: none;
+    transition: color 0.3s;
+    font-weight: 300;
+  }
+  .footer-col a:hover { color: var(--white); }
+  .footer-bottom {
+    max-width: 1400px;
+    margin: 3rem auto 0;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(184, 155, 106, 0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footer-bottom p {
+    font-size: 0.7rem;
+    color: rgba(250, 247, 242, 0.25);
+    letter-spacing: 0.05em;
+  }
+  .footer-social {
+    display: flex;
+    gap: 1.2rem;
+  }
+  .footer-social a {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(184, 155, 106, 0.15);
+    border-radius: 50%;
+    transition: all 0.3s;
+  }
+  .footer-social a:hover {
+    border-color: var(--gold);
+    background: rgba(184, 155, 106, 0.1);
+  }
+  .footer-social svg {
+    width: 14px;
+    height: 14px;
+    fill: rgba(250, 247, 242, 0.4);
+  }
+
+  /* ─── Responsive ─── */
+  @media (max-width: 1024px) {
+    .program-grid { grid-template-columns: 1fr; }
+    .testimonial-inner { grid-template-columns: 1fr; gap: 4rem; }
+    .principles-grid { grid-template-columns: 1fr 1fr; }
+    .footer-inner { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 1.2rem 1.5rem; }
+    .nav-links { display: none; }
+    .mobile-toggle { display: flex; }
+    .hero { padding: 0 1.5rem; }
+    .hero-sub { padding-left: 0; }
+    .programs, .principles { padding: 5rem 1.5rem; }
+    .testimonial-section { padding: 5rem 1.5rem; }
+    .testimonial-quote { padding-left: 1.5rem; }
+    .principles-grid { grid-template-columns: 1fr; }
+    .section-header { margin-bottom: 3rem; }
+    .join-section { padding: 6rem 1.5rem; }
+    .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
+    footer { padding: 3rem 1.5rem 2rem; }
+    .footer-bottom { flex-direction: column; gap: 1rem; text-align: center; }
+    .hero-scroll { display: none; }
+    .image-break-text { left: 1.5rem; bottom: 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ Navigation ═══ -->
+<nav>
+  <a href="#" class="nav-logo">
+    <img src="https://images.squarespace-cdn.com/content/v1/66307c0138a4f043bfe91c4c/c4817bc1-b19b-4ae8-94d1-7439b6dfd835/Recurso+10.png" alt="Fitrah Outdoors">
+  </a>
+  <ul class="nav-links">
+    <li><a href="#programs">Programs</a></li>
+    <li><a href="#principles">Principles</a></li>
+    <li><a href="#people">People</a></li>
+    <li><a href="#partners">Partners</a></li>
+    <li><a href="https://instagram.com/fitrahoutdoors" target="_blank">Instagram</a></li>
+    <li><a href="#join" class="nav-cta">Join the Community</a></li>
+  </ul>
+  <div class="mobile-toggle" role="button" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- ═══ Hero ═══ -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-eyebrow reveal">Fitrah Outdoors</div>
+    <h1 class="hero-title">
+      <span class="hero-line-1 reveal reveal-delay-1">Journey Outside.</span>
+      <span class="hero-line-2 reveal reveal-delay-2">Discover Within.</span>
+    </h1>
+    <div class="hero-sub reveal reveal-delay-3">
+      <p>Spiritually-rooted outdoor experiences that reconnect you with the natural world and the quiet voice within.</p>
+    </div>
+    <div class="hero-divider reveal reveal-delay-4"></div>
+  </div>
+  <div class="hero-scroll">Scroll<br>to explore</div>
+</section>
+
+<!-- ═══ Programs ═══ -->
+<div class="section-rule"><hr></div>
+<section class="programs" id="programs">
+  <div class="section-header reveal">
+    <div>
+      <div class="section-label">Upcoming Programs</div>
+      <h2 class="section-title">Step into what calls you</h2>
+    </div>
+    <a href="#" class="section-link">View all programs</a>
+  </div>
+  <div class="program-grid">
+    <div class="program-card reveal reveal-delay-1">
+      <div class="program-image-wrap">
+        <img class="program-image" src="https://images.unsplash.com/photo-1500514966906-fe245eea9344?w=800&q=80" alt="Sailing on the Bay">
+        <div class="program-date">February 14, 2026</div>
+      </div>
+      <div class="program-body">
+        <div class="program-tag">Day Excursion</div>
+        <h3 class="program-name">Sailing with Shukr on the S.F. Bay</h3>
+        <p class="program-desc">Set sail across the San Francisco Bay as the winter light softens the horizon. A day of gratitude, reflection, and the steady rhythm of water beneath you.</p>
+        <a href="#" class="program-cta">
+          Learn more
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+    <div class="program-card reveal reveal-delay-2">
+      <div class="program-image-wrap">
+        <img class="program-image" src="https://images.unsplash.com/photo-1497250681960-ef046c08a56e?w=800&q=80" alt="Nature education">
+        <div class="program-date">8-Week Course</div>
+      </div>
+      <div class="program-body">
+        <div class="program-tag">Homeschool Program</div>
+        <h3 class="program-name">The Book of Nature: Signs of the 7 Characteristics Allah Loves</h3>
+        <p class="program-desc">An immersive homeschool journey through the natural world, discovering divine attributes reflected in the ecosystems around us.</p>
+        <a href="#" class="program-cta">
+          Learn more
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Testimonials ═══ -->
+<section class="testimonial-section" id="people">
+  <div class="testimonial-inner">
+    <div class="testimonial-left reveal">
+      <div class="section-label">Voices from the Trail</div>
+      <h2 class="section-title">Stories of<br>transformation</h2>
+      <p>Each journey leaves its mark. Here are the words of those who stepped outside and found something waiting within.</p>
+    </div>
+    <div class="testimonial-quote reveal reveal-delay-2">
+      <span class="testimonial-mark">"</span>
+      <p class="testimonial-text">I came for the horseback riding but left with something I didn't know I was missing. The silence of the mountains, the du'a before we rode — it was medicine for the soul.</p>
+      <p class="testimonial-author">Amina R. — <span>Leavenworth Horseback Retreat</span></p>
+      <div class="testimonial-dots">
+        <div class="testimonial-dot active"></div>
+        <div class="testimonial-dot"></div>
+        <div class="testimonial-dot"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Image Break ═══ -->
+<div class="image-break">
+  <img src="https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=1600&q=80" alt="Desert landscape">
+  <div class="image-break-overlay"></div>
+  <div class="image-break-text reveal">Where the earth meets the sky,<br>you meet yourself.</div>
+</div>
+
+<!-- ═══ Principles ═══ -->
+<section class="principles" id="principles">
+  <div class="section-header reveal">
+    <div>
+      <div class="section-label">Our Principles</div>
+      <h2 class="section-title">Rooted in purpose</h2>
+    </div>
+  </div>
+  <div class="principles-grid">
+    <div class="principle-card reveal reveal-delay-1">
+      <div class="principle-num">01</div>
+      <h3 class="principle-title">Fitrah First</h3>
+      <p class="principle-text">Every human is born with an innate connection to the natural world. Our programs are designed to reawaken that primordial bond — the fitrah — that modern life so often obscures.</p>
+    </div>
+    <div class="principle-card reveal reveal-delay-2">
+      <div class="principle-num">02</div>
+      <h3 class="principle-title">Presence Over Performance</h3>
+      <p class="principle-text">We leave phones behind and metrics at the door. The only measure of a Fitrah experience is the depth of your presence — with the land, with community, with the Divine.</p>
+    </div>
+    <div class="principle-card reveal reveal-delay-3">
+      <div class="principle-num">03</div>
+      <h3 class="principle-title">The Earth as Teacher</h3>
+      <p class="principle-text">The Qur'an asks us to walk the earth and observe. We take that invitation literally — finding signs, lessons, and stillness in every forest trail and shifting tide.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Join CTA ═══ -->
+<section class="join-section" id="join">
+  <div class="join-inner reveal">
+    <div class="join-label">Join the Community</div>
+    <h2 class="join-title">The trail is waiting.<br>So is your soul.</h2>
+    <p class="join-text">Be the first to hear about upcoming journeys, seasonal retreats, and community gatherings. Step outside the ordinary.</p>
+    <a href="#" class="join-btn">Explore Programs</a>
+  </div>
+</section>
+
+<!-- ═══ Footer ═══ -->
+<footer id="partners">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <img src="https://images.squarespace-cdn.com/content/v1/66307c0138a4f043bfe91c4c/c4817bc1-b19b-4ae8-94d1-7439b6dfd835/Recurso+10.png" alt="Fitrah Outdoors">
+      <p>Spiritually-rooted outdoor experiences that reconnect you with the natural world and the quiet voice within.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navigate</h4>
+      <ul>
+        <li><a href="#programs">Programs</a></li>
+        <li><a href="#principles">Principles</a></li>
+        <li><a href="#people">People</a></li>
+        <li><a href="#partners">Partners</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Programs</h4>
+      <ul>
+        <li><a href="#">Sailing</a></li>
+        <li><a href="#">Farm Stays</a></li>
+        <li><a href="#">Horseback Riding</a></li>
+        <li><a href="#">Homeschool</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>Connect</h4>
+      <ul>
+        <li><a href="https://instagram.com/fitrahoutdoors" target="_blank">Instagram</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">Newsletter</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2026 Fitrah Outdoors. All rights reserved.</p>
+    <div class="footer-social">
+      <a href="https://instagram.com/fitrahoutdoors" target="_blank" aria-label="Instagram">
+        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+  reveals.forEach(el => observer.observe(el));
+
+  // Nav scroll effect
+  const nav = document.querySelector('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  });
+</script>
+
+</body>
+</html>

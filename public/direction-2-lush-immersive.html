@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fitrah Outdoors — Journey Outside. Discover Within.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;1,9..144,300;1,9..144,400&family=Libre+Franklin:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --forest: #1B3A2D;
+    --forest-deep: #0F2419;
+    --moss: #3D6B4F;
+    --sage: #7FA98A;
+    --cream: #F4F0E8;
+    --gold-warm: #D4A853;
+    --bark: #5C3D2E;
+    --mist: rgba(244, 240, 232, 0.6);
+    --heading: 'Fraunces', Georgia, serif;
+    --body: 'Libre Franklin', -apple-system, sans-serif;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--body);
+    background: var(--forest-deep);
+    color: var(--cream);
+    line-height: 1.7;
+    font-weight: 300;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── Animations ─── */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 1s ease, transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .fade-up.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .fade-up.d1 { transition-delay: 0.1s; }
+  .fade-up.d2 { transition-delay: 0.2s; }
+  .fade-up.d3 { transition-delay: 0.35s; }
+  .fade-up.d4 { transition-delay: 0.5s; }
+
+  /* ─── Navigation ─── */
+  .nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 1.25rem 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.5s ease;
+  }
+  .nav.solid {
+    background: rgba(15, 36, 25, 0.92);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(127, 169, 138, 0.1);
+  }
+  .nav-logo img {
+    height: 34px;
+    filter: brightness(10);
+    opacity: 0.9;
+  }
+  .nav-menu {
+    display: flex;
+    align-items: center;
+    gap: 2.2rem;
+    list-style: none;
+  }
+  .nav-menu a {
+    color: var(--cream);
+    text-decoration: none;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    font-weight: 400;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+  }
+  .nav-menu a:hover { opacity: 1; }
+  .nav-join {
+    padding: 0.55rem 1.4rem;
+    background: rgba(212, 168, 83, 0.15);
+    border: 1px solid rgba(212, 168, 83, 0.4);
+    color: var(--gold-warm) !important;
+    opacity: 1 !important;
+    font-size: 0.72rem !important;
+    letter-spacing: 0.12em !important;
+    text-transform: uppercase;
+    transition: all 0.3s !important;
+  }
+  .nav-join:hover {
+    background: var(--gold-warm) !important;
+    color: var(--forest-deep) !important;
+  }
+  .burger {
+    display: none;
+    width: 28px;
+    height: 20px;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+  }
+  .burger span {
+    height: 1.5px;
+    background: var(--cream);
+    border-radius: 1px;
+  }
+
+  /* ─── Hero ─── */
+  .hero {
+    min-height: 100vh;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  .hero-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.45) saturate(1.2);
+  }
+  .hero-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg,
+      rgba(15, 36, 25, 0.3) 0%,
+      rgba(15, 36, 25, 0.1) 40%,
+      rgba(15, 36, 25, 0.7) 75%,
+      rgba(15, 36, 25, 1) 100%
+    );
+  }
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    padding: 0 3rem 6rem;
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+  }
+  .hero-tag {
+    font-size: 0.7rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold-warm);
+    margin-bottom: 2rem;
+    font-weight: 500;
+  }
+  .hero-title {
+    font-family: var(--heading);
+    font-size: clamp(3rem, 7vw, 6.5rem);
+    font-weight: 300;
+    line-height: 1.1;
+    margin-bottom: 2rem;
+    max-width: 900px;
+  }
+  .hero-title em {
+    color: var(--sage);
+    font-style: italic;
+    font-weight: 300;
+  }
+  .hero-sub {
+    font-size: 1rem;
+    color: rgba(244, 240, 232, 0.6);
+    max-width: 520px;
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+  }
+  .hero-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 1rem 2rem;
+    background: var(--moss);
+    color: var(--cream);
+    text-decoration: none;
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+    border-radius: 2px;
+    transition: all 0.4s;
+  }
+  .hero-btn:hover { background: var(--sage); color: var(--forest-deep); }
+  .hero-btn svg { width: 18px; height: 18px; stroke: currentColor; fill: none; stroke-width: 2; }
+  .hero-scroll-indicator {
+    position: absolute;
+    bottom: 2rem;
+    right: 3rem;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+  .hero-scroll-indicator span {
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(244, 240, 232, 0.4);
+    writing-mode: vertical-rl;
+  }
+  .scroll-line {
+    width: 1px;
+    height: 50px;
+    background: linear-gradient(180deg, var(--sage), transparent);
+    animation: scrollDown 2s ease infinite;
+  }
+  @keyframes scrollDown {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  /* ─── Leaf Pattern Divider ─── */
+  .leaf-divider {
+    padding: 3rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+  }
+  .leaf-divider .line {
+    width: 80px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--moss), transparent);
+    opacity: 0.3;
+  }
+  .leaf-divider svg {
+    width: 20px;
+    height: 20px;
+    fill: var(--moss);
+    opacity: 0.3;
+  }
+
+  /* ─── Programs ─── */
+  .programs {
+    padding: 4rem 3rem 8rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .sec-header {
+    margin-bottom: 4rem;
+  }
+  .sec-tag {
+    font-size: 0.68rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold-warm);
+    font-weight: 500;
+    margin-bottom: 1rem;
+  }
+  .sec-title {
+    font-family: var(--heading);
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-weight: 300;
+    line-height: 1.2;
+  }
+
+  .program-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+  .p-card {
+    position: relative;
+    border-radius: 6px;
+    overflow: hidden;
+    background: rgba(61, 107, 79, 0.1);
+    border: 1px solid rgba(127, 169, 138, 0.1);
+    transition: transform 0.5s ease, border-color 0.5s;
+    cursor: pointer;
+  }
+  .p-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(127, 169, 138, 0.25);
+  }
+  .p-card-img {
+    position: relative;
+    height: 320px;
+    overflow: hidden;
+  }
+  .p-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+    filter: brightness(0.8) saturate(1.1);
+  }
+  .p-card:hover .p-card-img img { transform: scale(1.06); }
+  .p-card-img::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 50%, rgba(15, 36, 25, 0.6) 100%);
+  }
+  .p-card-badge {
+    position: absolute;
+    top: 1.2rem;
+    left: 1.2rem;
+    z-index: 1;
+    padding: 0.35rem 0.75rem;
+    background: rgba(15, 36, 25, 0.6);
+    backdrop-filter: blur(10px);
+    border-radius: 3px;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--sage);
+    font-weight: 500;
+  }
+  .p-card-body {
+    padding: 1.8rem;
+  }
+  .p-card-type {
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold-warm);
+    margin-bottom: 0.6rem;
+    font-weight: 500;
+  }
+  .p-card-name {
+    font-family: var(--heading);
+    font-size: 1.4rem;
+    font-weight: 400;
+    line-height: 1.35;
+    margin-bottom: 0.8rem;
+  }
+  .p-card-desc {
+    font-size: 0.82rem;
+    color: rgba(244, 240, 232, 0.5);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+  .p-card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--sage);
+    text-decoration: none;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-weight: 500;
+    transition: gap 0.3s;
+  }
+  .p-card-link:hover { gap: 14px; }
+  .p-card-link svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+  /* ─── Immersive Banner ─── */
+  .immersive-banner {
+    height: 80vh;
+    min-height: 500px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .immersive-banner img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.35) saturate(1.3);
+  }
+  .immersive-banner .overlay {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at center, rgba(15, 36, 25, 0.2) 0%, rgba(15, 36, 25, 0.7) 100%);
+  }
+  .immersive-text {
+    position: relative;
+    z-index: 1;
+    max-width: 700px;
+    padding: 0 2rem;
+  }
+  .immersive-text .sec-tag { margin-bottom: 1.5rem; }
+  .immersive-text h2 {
+    font-family: var(--heading);
+    font-size: clamp(2rem, 4.5vw, 3.8rem);
+    font-weight: 300;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+  }
+  .immersive-text h2 em {
+    color: var(--sage);
+    font-style: italic;
+  }
+  .immersive-text p {
+    font-size: 0.92rem;
+    color: rgba(244, 240, 232, 0.55);
+    line-height: 1.8;
+  }
+
+  /* ─── Testimonials ─── */
+  .testimonials {
+    padding: 8rem 3rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .testimonials .sec-tag { margin-bottom: 3rem; }
+  .testi-quote {
+    font-family: var(--heading);
+    font-size: clamp(1.4rem, 2.5vw, 2.2rem);
+    font-weight: 300;
+    line-height: 1.5;
+    font-style: italic;
+    margin-bottom: 2.5rem;
+    position: relative;
+  }
+  .testi-quote::before {
+    content: '';
+    display: block;
+    width: 40px;
+    height: 2px;
+    background: var(--gold-warm);
+    margin: 0 auto 2.5rem;
+    opacity: 0.5;
+  }
+  .testi-author {
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(244, 240, 232, 0.4);
+  }
+  .testi-author span { color: var(--sage); }
+  .testi-nav {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 3rem;
+  }
+  .testi-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(127, 169, 138, 0.2);
+    border: 1px solid rgba(127, 169, 138, 0.3);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .testi-dot.active {
+    background: var(--sage);
+    border-color: var(--sage);
+  }
+
+  /* ─── Principles ─── */
+  .principles-section {
+    padding: 4rem 3rem 8rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .principles-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+    margin-top: 4rem;
+  }
+  .prin-card {
+    background: rgba(61, 107, 79, 0.08);
+    border: 1px solid rgba(127, 169, 138, 0.08);
+    border-radius: 6px;
+    padding: 2.5rem 2rem;
+    transition: all 0.4s;
+  }
+  .prin-card:hover {
+    background: rgba(61, 107, 79, 0.15);
+    border-color: rgba(127, 169, 138, 0.2);
+    transform: translateY(-3px);
+  }
+  .prin-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(212, 168, 83, 0.1);
+    border: 1px solid rgba(212, 168, 83, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+  }
+  .prin-icon svg {
+    width: 20px;
+    height: 20px;
+    stroke: var(--gold-warm);
+    fill: none;
+    stroke-width: 1.5;
+  }
+  .prin-title {
+    font-family: var(--heading);
+    font-size: 1.2rem;
+    font-weight: 400;
+    margin-bottom: 0.8rem;
+  }
+  .prin-text {
+    font-size: 0.82rem;
+    color: rgba(244, 240, 232, 0.45);
+    line-height: 1.75;
+  }
+
+  /* ─── CTA Section ─── */
+  .cta-section {
+    padding: 8rem 3rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(180deg, var(--forest-deep) 0%, var(--forest) 50%, var(--forest-deep) 100%);
+  }
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, rgba(61, 107, 79, 0.2) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 50%, rgba(212, 168, 83, 0.08) 0%, transparent 50%);
+  }
+  .cta-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 650px;
+    margin: 0 auto;
+  }
+  .cta-inner .sec-tag { margin-bottom: 2rem; }
+  .cta-title {
+    font-family: var(--heading);
+    font-size: clamp(2rem, 3.5vw, 3rem);
+    font-weight: 300;
+    line-height: 1.25;
+    margin-bottom: 1.5rem;
+  }
+  .cta-title em { color: var(--sage); font-style: italic; }
+  .cta-text {
+    font-size: 0.9rem;
+    color: rgba(244, 240, 232, 0.5);
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+  }
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 1rem 2.5rem;
+    background: var(--gold-warm);
+    color: var(--forest-deep);
+    text-decoration: none;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 600;
+    border-radius: 2px;
+    transition: all 0.4s;
+  }
+  .cta-btn:hover { background: #e0b65e; transform: translateY(-2px); }
+
+  /* ─── Footer ─── */
+  footer {
+    padding: 4rem 3rem 2.5rem;
+    border-top: 1px solid rgba(127, 169, 138, 0.08);
+  }
+  .foot-inner {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 3rem;
+  }
+  .foot-brand img {
+    height: 28px;
+    filter: brightness(10);
+    opacity: 0.6;
+    margin-bottom: 1.2rem;
+  }
+  .foot-brand p {
+    font-size: 0.78rem;
+    color: rgba(244, 240, 232, 0.3);
+    line-height: 1.7;
+    max-width: 280px;
+  }
+  .foot-col h4 {
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--sage);
+    margin-bottom: 1.2rem;
+    font-weight: 500;
+  }
+  .foot-col ul { list-style: none; }
+  .foot-col li { margin-bottom: 0.7rem; }
+  .foot-col a {
+    font-size: 0.8rem;
+    color: rgba(244, 240, 232, 0.35);
+    text-decoration: none;
+    transition: color 0.3s;
+    font-weight: 300;
+  }
+  .foot-col a:hover { color: var(--cream); }
+  .foot-bottom {
+    max-width: 1400px;
+    margin: 2.5rem auto 0;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(127, 169, 138, 0.06);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .foot-bottom p {
+    font-size: 0.68rem;
+    color: rgba(244, 240, 232, 0.2);
+  }
+
+  /* ─── Responsive ─── */
+  @media (max-width: 1024px) {
+    .program-cards { grid-template-columns: 1fr; }
+    .principles-grid { grid-template-columns: 1fr 1fr; }
+    .foot-inner { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 768px) {
+    .nav { padding: 1rem 1.5rem; }
+    .nav-menu { display: none; }
+    .burger { display: flex; }
+    .hero-content { padding: 0 1.5rem 4rem; }
+    .programs, .principles-section { padding: 4rem 1.5rem; }
+    .testimonials { padding: 5rem 1.5rem; }
+    .principles-grid { grid-template-columns: 1fr; }
+    .cta-section { padding: 5rem 1.5rem; }
+    footer { padding: 3rem 1.5rem 2rem; }
+    .foot-inner { grid-template-columns: 1fr; gap: 2rem; }
+    .foot-bottom { flex-direction: column; gap: 1rem; }
+    .hero-scroll-indicator { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ Navigation ═══ -->
+<header class="nav">
+  <a href="#" class="nav-logo">
+    <img src="https://images.squarespace-cdn.com/content/v1/66307c0138a4f043bfe91c4c/c4817bc1-b19b-4ae8-94d1-7439b6dfd835/Recurso+10.png" alt="Fitrah Outdoors">
+  </a>
+  <ul class="nav-menu">
+    <li><a href="#programs">Programs</a></li>
+    <li><a href="#principles">Principles</a></li>
+    <li><a href="#people">People</a></li>
+    <li><a href="#partners">Partners</a></li>
+    <li><a href="https://instagram.com/fitrahoutdoors" target="_blank">Instagram</a></li>
+    <li><a href="#join" class="nav-join">Join Community</a></li>
+  </ul>
+  <div class="burger" aria-label="Menu"><span></span><span></span><span></span></div>
+</header>
+
+<!-- ═══ Hero ═══ -->
+<section class="hero">
+  <div class="hero-bg">
+    <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1600&q=80" alt="Forest canopy">
+  </div>
+  <div class="hero-gradient"></div>
+  <div class="hero-content">
+    <div class="hero-tag fade-up">Fitrah Outdoors</div>
+    <h1 class="hero-title fade-up d1">Journey Outside.<br><em>Discover Within.</em></h1>
+    <p class="hero-sub fade-up d2">Immerse yourself in spiritually-rooted outdoor experiences that reconnect you with creation, community, and the Creator.</p>
+    <a href="#programs" class="hero-btn fade-up d3">
+      Explore Programs
+      <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+  <div class="hero-scroll-indicator">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ═══ Programs ═══ -->
+<div class="leaf-divider">
+  <div class="line"></div>
+  <svg viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20c4 0 8.71-3.13 9.49-7.5A11.76 11.76 0 0 0 21 3c-2 .5-4.5 1.5-6 3a9.87 9.87 0 0 0-2 2z"/></svg>
+  <div class="line"></div>
+</div>
+
+<section class="programs" id="programs">
+  <div class="sec-header fade-up">
+    <div class="sec-tag">Upcoming Programs</div>
+    <h2 class="sec-title">Where will your next<br>journey take you?</h2>
+  </div>
+  <div class="program-cards">
+    <div class="p-card fade-up d1">
+      <div class="p-card-img">
+        <img src="https://images.unsplash.com/photo-1500514966906-fe245eea9344?w=800&q=80" alt="Sailing on the Bay">
+        <div class="p-card-badge">Feb 14, 2026</div>
+      </div>
+      <div class="p-card-body">
+        <div class="p-card-type">Day Excursion</div>
+        <h3 class="p-card-name">Sailing with Shukr on the S.F. Bay</h3>
+        <p class="p-card-desc">Let gratitude carry you across the Bay as the winter light paints the Golden Gate. A day of reflection, community, and the healing rhythm of the sea.</p>
+        <a href="#" class="p-card-link">Learn more <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+    <div class="p-card fade-up d2">
+      <div class="p-card-img">
+        <img src="https://images.unsplash.com/photo-1497250681960-ef046c08a56e?w=800&q=80" alt="Nature education">
+        <div class="p-card-badge">8-Week Course</div>
+      </div>
+      <div class="p-card-body">
+        <div class="p-card-type">Homeschool Program</div>
+        <h3 class="p-card-name">The Book of Nature: Signs of the 7 Characteristics Allah Loves</h3>
+        <p class="p-card-desc">An immersive journey through the natural world, discovering divine attributes reflected in the ecosystems, creatures, and cycles around us.</p>
+        <a href="#" class="p-card-link">Learn more <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Immersive Banner ═══ -->
+<div class="immersive-banner">
+  <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1600&q=80" alt="Misty forest valley">
+  <div class="overlay"></div>
+  <div class="immersive-text fade-up">
+    <div class="sec-tag">Our Approach</div>
+    <h2>Phones down.<br><em>Hearts open.</em></h2>
+    <p>We collect devices at the start of every journey. What you gain in return is the full, undivided experience of being present — with the earth, with your community, with yourself.</p>
+  </div>
+</div>
+
+<!-- ═══ Testimonials ═══ -->
+<section class="testimonials" id="people">
+  <div class="sec-tag fade-up">Voices from the Trail</div>
+  <div class="fade-up d1">
+    <blockquote class="testi-quote">
+      I arrived exhausted and disconnected. By the time we gathered for Maghrib overlooking the valley, I felt like I was breathing for the first time in months. Fitrah doesn't just take you outdoors — it brings you home.
+    </blockquote>
+    <p class="testi-author">Khadija M. — <span>Pescadero Farm Stay</span></p>
+    <div class="testi-nav">
+      <div class="testi-dot active"></div>
+      <div class="testi-dot"></div>
+      <div class="testi-dot"></div>
+      <div class="testi-dot"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Principles ═══ -->
+<div class="leaf-divider">
+  <div class="line"></div>
+  <svg viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20c4 0 8.71-3.13 9.49-7.5A11.76 11.76 0 0 0 21 3c-2 .5-4.5 1.5-6 3a9.87 9.87 0 0 0-2 2z"/></svg>
+  <div class="line"></div>
+</div>
+
+<section class="principles-section" id="principles">
+  <div class="sec-header fade-up">
+    <div class="sec-tag">Our Principles</div>
+    <h2 class="sec-title">Rooted in intention,<br>guided by nature</h2>
+  </div>
+  <div class="principles-grid">
+    <div class="prin-card fade-up d1">
+      <div class="prin-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 6v6l4 2"/></svg>
+      </div>
+      <h3 class="prin-title">Fitrah First</h3>
+      <p class="prin-text">Every soul carries an innate connection to creation. Our journeys are designed to reawaken the primordial bond — the fitrah — that modern life obscures.</p>
+    </div>
+    <div class="prin-card fade-up d2">
+      <div class="prin-icon">
+        <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </div>
+      <h3 class="prin-title">Presence Over Performance</h3>
+      <p class="prin-text">We leave metrics at the door. The only measure of a Fitrah experience is the depth of your presence — with the land, with community, with the Divine.</p>
+    </div>
+    <div class="prin-card fade-up d3">
+      <div class="prin-icon">
+        <svg viewBox="0 0 24 24"><path d="M17 8C8 10 5.9 16.17 3.82 21.34L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20c4 0 8.71-3.13 9.49-7.5A11.76 11.76 0 0 0 21 3c-2 .5-4.5 1.5-6 3a9.87 9.87 0 0 0-2 2z"/></svg>
+      </div>
+      <h3 class="prin-title">The Earth as Teacher</h3>
+      <p class="prin-text">The Qur'an asks us to walk the earth and observe. We take that literally — finding signs, lessons, and stillness in every forest trail and shifting tide.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA ═══ -->
+<section class="cta-section" id="join">
+  <div class="cta-inner fade-up">
+    <div class="sec-tag">Join the Community</div>
+    <h2 class="cta-title">The forest is calling.<br><em>Will you answer?</em></h2>
+    <p class="cta-text">Be the first to hear about upcoming journeys, seasonal retreats, and community gatherings. Your next adventure begins with a single step.</p>
+    <a href="#" class="cta-btn">Explore Programs</a>
+  </div>
+</section>
+
+<!-- ═══ Footer ═══ -->
+<footer id="partners">
+  <div class="foot-inner">
+    <div class="foot-brand">
+      <img src="https://images.squarespace-cdn.com/content/v1/66307c0138a4f043bfe91c4c/c4817bc1-b19b-4ae8-94d1-7439b6dfd835/Recurso+10.png" alt="Fitrah Outdoors">
+      <p>Spiritually-rooted outdoor experiences reconnecting you with the natural world and the quiet voice within.</p>
+    </div>
+    <div class="foot-col">
+      <h4>Navigate</h4>
+      <ul>
+        <li><a href="#programs">Programs</a></li>
+        <li><a href="#principles">Principles</a></li>
+        <li><a href="#people">People</a></li>
+        <li><a href="#partners">Partners</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h4>Programs</h4>
+      <ul>
+        <li><a href="#">Sailing</a></li>
+        <li><a href="#">Farm Stays</a></li>
+        <li><a href="#">Horseback Riding</a></li>
+        <li><a href="#">Homeschool</a></li>
+      </ul>
+    </div>
+    <div class="foot-col">
+      <h4>Connect</h4>
+      <ul>
+        <li><a href="https://instagram.com/fitrahoutdoors" target="_blank">Instagram</a></li>
+        <li><a href="#">Contact</a></li>
+        <li><a href="#">Newsletter</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <p>&copy; 2026 Fitrah Outdoors. All rights reserved.</p>
+  </div>
+</footer>
+
+<script>
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in-view'); });
+  }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+  document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+
+  const nav = document.querySelector('.nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('solid', window.scrollY > 80));
+</script>
+
+</body>
+</html>

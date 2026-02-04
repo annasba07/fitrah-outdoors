@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fitrah Outdoors — Journey Outside. Discover Within.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,700;1,6..96,400;1,6..96,500&family=Karla:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --clay: #C4572A;
+    --clay-deep: #8B3A1C;
+    --linen: #F0E6D3;
+    --linen-dark: #E2D4BD;
+    --ink: #1A1612;
+    --ink-mid: #3D3228;
+    --indigo: #2C3E7B;
+    --indigo-light: #4A5FA0;
+    --cream: #FAF4E8;
+    --warm-gray: #9A8E7E;
+    --heading: 'Bodoni Moda', 'Didot', serif;
+    --body: 'Karla', sans-serif;
+  }
+
+  html { font-size: 16px; scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--body);
+    background: var(--linen);
+    color: var(--ink);
+    line-height: 1.65;
+    font-weight: 300;
+    overflow-x: hidden;
+  }
+
+  /* ─── Grain Texture ─── */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.35;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.08'/%3E%3C/svg%3E");
+  }
+
+  /* ─── Reveal ─── */
+  .r { opacity: 0; transition: opacity 1.2s ease, transform 1.2s cubic-bezier(0.16, 1, 0.3, 1); }
+  .r.up { transform: translateY(60px); }
+  .r.left { transform: translateX(-40px); }
+  .r.right { transform: translateX(40px); }
+  .r.scale { transform: scale(0.92); }
+  .r.on { opacity: 1; transform: none; }
+  .r.w1 { transition-delay: 0.1s; }
+  .r.w2 { transition-delay: 0.25s; }
+  .r.w3 { transition-delay: 0.4s; }
+  .r.w4 { transition-delay: 0.55s; }
+
+  /* ─── Nav ─── */
+  .nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.2rem 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    mix-blend-mode: normal;
+    transition: all 0.5s;
+  }
+  .nav.stuck {
+    background: rgba(240, 230, 211, 0.92);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 1px 0 rgba(26, 22, 18, 0.06);
+  }
+  .nav-logo img { height: 30px; opacity: 0.8; }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 1.8rem;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: var(--body);
+    font-size: 0.78rem;
+    color: var(--ink-mid);
+    text-decoration: none;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    transition: color 0.3s;
+  }
+  .nav-links a:hover { color: var(--clay); }
+  .nav-join {
+    padding: 0.45rem 1.1rem !important;
+    background: var(--clay) !important;
+    color: var(--cream) !important;
+    border-radius: 24px;
+    font-size: 0.72rem !important;
+    font-weight: 500 !important;
+    transition: all 0.3s !important;
+  }
+  .nav-join:hover { background: var(--clay-deep) !important; }
+  .mob-btn { display: none; cursor: pointer; }
+  .mob-btn span { display: block; width: 22px; height: 1.5px; background: var(--ink); margin: 5px 0; }
+
+  /* ─── Hero ─── */
+  .hero {
+    min-height: 100vh;
+    padding: 8rem 2.5rem 4rem;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+  }
+  /* Ink wash background */
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    right: -15%;
+    width: 80%;
+    height: 120%;
+    background: radial-gradient(ellipse, rgba(196, 87, 42, 0.07) 0%, transparent 65%);
+    pointer-events: none;
+  }
+  .hero-grid {
+    max-width: 1400px;
+    margin: 0 auto;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 55% 45%;
+    gap: 3rem;
+    align-items: center;
+  }
+  .hero-text {
+    position: relative;
+    z-index: 2;
+  }
+  .hero-kicker {
+    font-family: var(--body);
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--clay);
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-kicker::before {
+    content: '';
+    width: 30px;
+    height: 2px;
+    background: var(--clay);
+    border-radius: 1px;
+  }
+  .hero-h1 {
+    font-family: var(--heading);
+    font-weight: 400;
+    line-height: 1.0;
+    margin-bottom: 2rem;
+  }
+  .hero-h1 .line-1 {
+    font-size: clamp(3.5rem, 7vw, 7rem);
+    display: block;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+  }
+  .hero-h1 .line-2 {
+    font-size: clamp(3rem, 6vw, 6rem);
+    display: block;
+    font-style: italic;
+    color: var(--clay);
+    margin-left: clamp(1rem, 4vw, 5rem);
+    letter-spacing: -0.01em;
+  }
+  .hero-body {
+    font-size: 0.95rem;
+    color: var(--warm-gray);
+    max-width: 380px;
+    line-height: 1.75;
+    margin-bottom: 2.5rem;
+    margin-left: clamp(1rem, 4vw, 5rem);
+  }
+  .hero-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: clamp(1rem, 4vw, 5rem);
+    padding: 0.8rem 1.6rem;
+    background: var(--ink);
+    color: var(--cream);
+    text-decoration: none;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    font-weight: 400;
+    border-radius: 28px;
+    transition: all 0.4s;
+  }
+  .hero-btn:hover { background: var(--clay-deep); transform: translateY(-2px); }
+  .hero-btn svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.5; }
+
+  /* Organic blob image */
+  .hero-visual {
+    position: relative;
+    z-index: 1;
+  }
+  .blob-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4/5;
+  }
+  .blob-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    clip-path: path('M 220 20 C 330 -10 440 40 480 130 C 520 220 510 330 470 410 C 430 490 350 530 260 520 C 170 510 80 470 40 380 C 0 290 10 200 50 130 C 90 60 110 50 220 20 Z');
+    filter: saturate(0.85) contrast(1.05);
+  }
+  /* Decorative blob behind */
+  .blob-deco {
+    position: absolute;
+    top: -5%;
+    left: -8%;
+    width: 110%;
+    height: 110%;
+    border-radius: 60% 40% 55% 45% / 50% 60% 40% 50%;
+    background: linear-gradient(135deg, rgba(196, 87, 42, 0.08), rgba(44, 62, 123, 0.06));
+    z-index: -1;
+    animation: blobShift 15s ease-in-out infinite alternate;
+  }
+  @keyframes blobShift {
+    0% { border-radius: 60% 40% 55% 45% / 50% 60% 40% 50%; }
+    33% { border-radius: 45% 55% 40% 60% / 55% 45% 55% 45%; }
+    66% { border-radius: 55% 45% 60% 40% / 40% 55% 45% 55%; }
+    100% { border-radius: 50% 50% 45% 55% / 55% 45% 50% 50%; }
+  }
+  /* Ink splatter SVG decoration */
+  .ink-splat {
+    position: absolute;
+    bottom: 10%;
+    right: -5%;
+    width: 120px;
+    height: 120px;
+    opacity: 0.06;
+  }
+  .ink-splat svg { width: 100%; height: 100%; }
+
+  /* ─── Dashed Divider ─── */
+  .dashed-div {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2.5rem;
+  }
+  .dashed-div hr {
+    border: none;
+    border-top: 1.5px dashed var(--linen-dark);
+  }
+
+  /* ─── Programs ─── */
+  .programs {
+    padding: 6rem 2.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .stag { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 4rem; flex-wrap: wrap; gap: 1.5rem; }
+  .stag-label {
+    font-family: var(--body);
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--clay);
+    font-weight: 500;
+    margin-bottom: 0.8rem;
+  }
+  .stag-title {
+    font-family: var(--heading);
+    font-size: clamp(2rem, 3.5vw, 3.2rem);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.01em;
+  }
+  .stag-link {
+    font-size: 0.72rem;
+    color: var(--indigo);
+    text-decoration: none;
+    font-weight: 500;
+    padding-bottom: 2px;
+    border-bottom: 1px solid var(--indigo);
+    transition: all 0.3s;
+  }
+  .stag-link:hover { color: var(--clay); border-color: var(--clay); }
+
+  /* Organic card layout — staggered, not grid-aligned */
+  .organic-cards {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 2.5rem;
+    align-items: start;
+  }
+  .organic-cards .o-card:nth-child(2) {
+    margin-top: 4rem;
+  }
+  .o-card {
+    background: var(--cream);
+    border: 1px dashed rgba(196, 87, 42, 0.2);
+    overflow: hidden;
+    border-radius: 12px 4px 12px 4px;
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .o-card:hover { transform: translateY(-6px) rotate(-0.5deg); }
+  .o-card-img {
+    position: relative;
+    overflow: hidden;
+    height: 320px;
+  }
+  .o-card-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.8) contrast(1.05);
+    transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .o-card:hover .o-card-img img { transform: scale(1.05); }
+  .o-card-when {
+    position: absolute;
+    bottom: 1rem;
+    left: 1rem;
+    padding: 0.3rem 0.7rem;
+    background: var(--cream);
+    font-size: 0.62rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--clay);
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  }
+  .o-card-body {
+    padding: 2rem;
+  }
+  .o-card-cat {
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: var(--indigo);
+    margin-bottom: 0.5rem;
+  }
+  .o-card-title {
+    font-family: var(--heading);
+    font-size: 1.4rem;
+    font-weight: 400;
+    line-height: 1.3;
+    margin-bottom: 0.8rem;
+    letter-spacing: -0.01em;
+  }
+  .o-card-desc {
+    font-size: 0.82rem;
+    color: var(--warm-gray);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+  .o-card-go {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--heading);
+    font-size: 0.88rem;
+    font-style: italic;
+    color: var(--clay);
+    text-decoration: none;
+    transition: gap 0.3s;
+  }
+  .o-card-go:hover { gap: 12px; }
+  .o-card-go svg { width: 16px; height: 16px; stroke: currentColor; fill: none; stroke-width: 1.5; }
+
+  /* ─── Full-bleed organic image ─── */
+  .organic-break {
+    padding: 2rem 2.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .organic-img-wrap {
+    width: 100%;
+    height: 50vh;
+    min-height: 380px;
+    overflow: hidden;
+    border-radius: 20px 4px 20px 4px;
+    position: relative;
+  }
+  .organic-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.75) contrast(1.05);
+  }
+  .organic-img-wrap::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 40%, rgba(26, 22, 18, 0.5) 100%);
+  }
+  .organic-img-text {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 2.5rem;
+    z-index: 1;
+    max-width: 500px;
+  }
+  .organic-img-text blockquote {
+    font-family: var(--heading);
+    font-size: clamp(1.3rem, 2.5vw, 2rem);
+    font-weight: 400;
+    font-style: italic;
+    color: var(--cream);
+    line-height: 1.4;
+    text-shadow: 0 2px 15px rgba(0,0,0,0.2);
+  }
+
+  /* ─── Testimonial — hand-drawn card ─── */
+  .testi-section {
+    padding: 6rem 2.5rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .testi-card {
+    background: var(--cream);
+    border: 1.5px dashed rgba(196, 87, 42, 0.25);
+    border-radius: 20px 6px 20px 6px;
+    padding: 3.5rem 3rem;
+    position: relative;
+    transform: rotate(-0.8deg);
+  }
+  .testi-mark {
+    position: absolute;
+    top: 1.5rem;
+    left: 2rem;
+    font-family: var(--heading);
+    font-size: 5rem;
+    color: var(--linen-dark);
+    line-height: 1;
+    user-select: none;
+  }
+  .testi-quote {
+    font-family: var(--heading);
+    font-size: clamp(1.2rem, 2vw, 1.7rem);
+    font-weight: 400;
+    font-style: italic;
+    line-height: 1.55;
+    margin-bottom: 2rem;
+    position: relative;
+    z-index: 1;
+    color: var(--ink);
+  }
+  .testi-who {
+    font-size: 0.75rem;
+    color: var(--warm-gray);
+    font-weight: 400;
+    position: relative;
+    z-index: 1;
+  }
+  .testi-who strong { color: var(--clay); font-weight: 500; }
+  /* Decorative clay circle */
+  .testi-circle {
+    position: absolute;
+    top: -15px;
+    right: 2rem;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--clay);
+    opacity: 0.08;
+  }
+
+  /* ─── Principles — scattered cards ─── */
+  .principles {
+    padding: 6rem 2.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .p-scatter {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    margin-top: 4rem;
+  }
+  .p-scatter .p-item:nth-child(2) {
+    margin-top: 3rem;
+  }
+  .p-item {
+    background: var(--cream);
+    border: 1.5px dashed rgba(44, 62, 123, 0.12);
+    border-radius: 4px 16px 4px 16px;
+    padding: 2.5rem 2rem;
+    transition: all 0.4s;
+    position: relative;
+  }
+  .p-item:hover { transform: rotate(-1deg) translateY(-4px); }
+  .p-item-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--clay);
+    opacity: 0.15;
+    margin-bottom: 1.5rem;
+  }
+  .p-item:nth-child(2) .p-item-dot { background: var(--indigo); }
+  .p-item:nth-child(3) .p-item-dot { background: var(--clay-deep); }
+  .p-item-name {
+    font-family: var(--heading);
+    font-size: 1.2rem;
+    font-weight: 500;
+    margin-bottom: 0.7rem;
+    letter-spacing: -0.01em;
+  }
+  .p-item-text {
+    font-size: 0.82rem;
+    color: var(--warm-gray);
+    line-height: 1.75;
+  }
+
+  /* ─── CTA ─── */
+  .cta-section {
+    padding: 7rem 2.5rem;
+    text-align: center;
+    background: var(--ink);
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 60% 40%, rgba(196, 87, 42, 0.1) 0%, transparent 50%);
+  }
+  .cta-section::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.15;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)' opacity='0.1'/%3E%3C/svg%3E");
+  }
+  .cta-inner {
+    position: relative;
+    z-index: 1;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .cta-inner .stag-label { color: var(--clay); margin-bottom: 1.5rem; }
+  .cta-title {
+    font-family: var(--heading);
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 400;
+    color: var(--cream);
+    line-height: 1.15;
+    margin-bottom: 1.2rem;
+    letter-spacing: -0.01em;
+  }
+  .cta-title em { color: var(--clay); font-style: italic; }
+  .cta-sub {
+    font-size: 0.88rem;
+    color: rgba(240, 230, 211, 0.4);
+    line-height: 1.75;
+    margin-bottom: 2.5rem;
+  }
+  .cta-btn {
+    display: inline-block;
+    padding: 0.85rem 2rem;
+    background: var(--clay);
+    color: var(--cream);
+    text-decoration: none;
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    font-weight: 500;
+    border-radius: 28px;
+    transition: all 0.3s;
+  }
+  .cta-btn:hover { background: #d4683a; transform: translateY(-2px); }
+
+  /* ─── Footer ─── */
+  footer {
+    padding: 3.5rem 2.5rem 2rem;
+    background: var(--ink);
+    border-top: 1px dashed rgba(196, 87, 42, 0.1);
+  }
+  .ft { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 2.5rem; }
+  .ft-brand img { height: 26px; filter: brightness(10); opacity: 0.4; margin-bottom: 1rem; }
+  .ft-brand p { font-size: 0.75rem; color: rgba(240, 230, 211, 0.2); line-height: 1.7; max-width: 240px; }
+  .ft-col h4 { font-family: var(--heading); font-size: 0.82rem; font-weight: 400; font-style: italic; color: var(--clay); margin-bottom: 1rem; opacity: 0.7; }
+  .ft-col ul { list-style: none; }
+  .ft-col li { margin-bottom: 0.55rem; }
+  .ft-col a { font-size: 0.75rem; color: rgba(240, 230, 211, 0.25); text-decoration: none; transition: color 0.3s; }
+  .ft-col a:hover { color: var(--cream); }
+  .ft-end { max-width: 1400px; margin: 2rem auto 0; padding-top: 1.5rem; border-top: 1px dashed rgba(196, 87, 42, 0.06); text-align: center; }
+  .ft-end p { font-size: 0.62rem; color: rgba(240, 230, 211, 0.12); }
+
+  /* ─── Responsive ─── */
+  @media (max-width: 1024px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-visual { max-width: 400px; margin: 0 auto; }
+    .organic-cards { grid-template-columns: 1fr; }
+    .organic-cards .o-card:nth-child(2) { margin-top: 0; }
+    .p-scatter { grid-template-columns: 1fr 1fr; }
+    .p-scatter .p-item:nth-child(2) { margin-top: 0; }
+    .ft { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 768px) {
+    .nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .mob-btn { display: block; }
+    .hero { padding: 7rem 1.5rem 3rem; }
+    .hero-body, .hero-btn { margin-left: 0; }
+    .hero-h1 .line-2 { margin-left: 0; }
+    .programs, .principles { padding: 4rem 1.5rem; }
+    .testi-section { padding: 4rem 1.5rem; }
+    .testi-card { padding: 2.5rem 1.5rem; transform: none; }
+    .p-scatter { grid-template-columns: 1fr; }
+    .cta-section { padding: 5rem 1.5rem; }
+    .organic-break { padding: 2rem 1.5rem; }
+    footer { padding: 2.5rem 1.5rem 1.5rem; }
+    .ft { grid-template-columns: 1fr; }
+    .blob-img { clip-path: ellipse(48% 48% at 50% 50%); }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ Nav ═══ -->
+<nav class="nav">
+  <a href="#" class="nav-logo"><img src="https://images.squarespace-cdn.com/content/v1/66307c0138a4f043bfe91c4c/c4817bc1-b19b-4ae8-94d1-7439b6dfd835/Recurso+10.png" alt="Fitrah Outdoors"></a>
+  <ul class="nav-links">
+    <li><a href="#programs">Programs</a></li>
+    <li><a href="#principles">Principles</a></li>
+    <li><a href="#people">People</a></li>
+    <li><a href="https://instagram.com/fitrahoutdoors" target="_blank">Instagram</a></li>
+    <li><a href="#join" class="nav-join">Join us</a></li>
+  </ul>
+  <div class="mob-btn" aria-label="Menu"><span></span><span></span><span></span></div>
+</nav>
+
+<!-- ═══ Hero ═══ -->
+<section class="hero">
+  <div class="hero-grid">
+    <div class="hero-text">
+      <div class="hero-kicker r up">Fitrah Outdoors</div>
+      <h1 class="hero-h1">
+        <span class="line-1 r up w1">Journey</span>
+        <span class="line-2 r up w2">Outside.</span>
+      </h1>
+      <p class="hero-body r up w3">Imperfect. Unhurried. Real. Outdoor experiences shaped by faith, grounded in earth, and held together by community.</p>
+      <a href="#programs" class="hero-btn r up w4">
+        Explore programs
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+    <div class="hero-visual r scale w2">
+      <div class="blob-wrap">
+        <img class="blob-img" src="https://images.unsplash.com/photo-1501555088652-021faa106b9b?w=700&q=80" alt="Outdoor journey">
+        <div class="blob-deco"></div>
+        <div class="ink-splat">
+          <svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="35" fill="#1A1612"/><circle cx="25" cy="30" r="12" fill="#1A1612"/><circle cx="75" cy="70" r="10" fill="#1A1612"/><circle cx="60" cy="25" r="8" fill="#1A1612"/><circle cx="35" cy="75" r="6" fill="#1A1612"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Programs ═══ -->
+<div class="dashed-div"><hr></div>
+<section class="programs" id="programs">
+  <div class="stag r up">
+    <div>
+      <div class="stag-label">Upcoming Programs</div>
+      <h2 class="stag-title">What's unfolding</h2>
+    </div>
+    <a href="#" class="stag-link">See all programs</a>
+  </div>
+  <div class="organic-cards">
+    <div class="o-card r up w1">
+      <div class="o-card-img">
+        <img src="https://images.unsplash.com/photo-1500514966906-fe245eea9344?w=800&q=80" alt="Sailing">
+        <div class="o-card-when">Feb 14, 2026</div>
+      </div>
+      <div class="o-card-body">
+        <div class="o-card-cat">Day Excursion</div>
+        <h3 class="o-card-title">Sailing with Shukr on the S.F. Bay</h3>
+        <p class="o-card-desc">Water has a way of smoothing rough edges. Spend a day on the Bay, letting gratitude fill the sails and the silence fill the spaces between.</p>
+        <a href="#" class="o-card-go">Continue reading <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+    <div class="o-card r up w2">
+      <div class="o-card-img">
+        <img src="https://images.unsplash.com/photo-1497250681960-ef046c08a56e?w=800&q=80" alt="Nature">
+        <div class="o-card-when">8-Week Course</div>
+      </div>
+      <div class="o-card-body">
+        <div class="o-card-cat">Homeschool Program</div>
+        <h3 class="o-card-title">The Book of Nature: Signs of the 7 Characteristics Allah Loves</h3>
+        <p class="o-card-desc">Some lessons aren't found in textbooks. Discover divine attributes written in bark, soil, and the turning of seasons.</p>
+        <a href="#" class="o-card-go">Continue reading <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ Organic Image ═══ -->
+<div class="organic-break">
+  <div class="organic-img-wrap r scale">
+    <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=1400&q=80" alt="Misty valley">
+    <div class="organic-img-text">
+      <blockquote>The cracks are where the light gets in. Every imperfect path leads somewhere beautiful.</blockquote>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ Testimonial ═══ -->
+<section class="testi-section" id="people">
+  <div class="testi-card r up">
+    <span class="testi-mark">"</span>
+    <div class="testi-circle"></div>
+    <blockquote class="testi-quote">I didn't need a perfect retreat. I needed a real one. Muddy boots, cold hands, warm chai, and a community that didn't ask me to perform. Fitrah gave me permission to just be.</blockquote>
+    <p class="testi-who"><strong>Nadia H.</strong> — Pescadero Farm Stay</p>
+  </div>
+</section>
+
+<!-- ═══ Principles ═══ -->
+<div class="dashed-div"><hr></div>
+<section class="principles" id="principles">
+  <div class="stag r up">
+    <div>
+      <div class="stag-label">Our Principles</div>
+      <h2 class="stag-title">Shaped by hand,<br>not algorithm</h2>
+    </div>
+  </div>
+  <div class="p-scatter">
+    <div class="p-item r up w1">
+      <div class="p-item-dot"></div>
+      <h3 class="p-item-name">Fitrah First</h3>
+      <p class="p-item-text">Before the polish, before the persona — there's the fitrah. That raw, original self. Our journeys strip away layers so you can meet it again.</p>
+    </div>
+    <div class="p-item r up w2">
+      <div class="p-item-dot"></div>
+      <h3 class="p-item-name">Presence Over Performance</h3>
+      <p class="p-item-text">No curated highlight reel. No perfect Instagram angle. Just dirt under your fingernails and dua on your lips. That's the whole point.</p>
+    </div>
+    <div class="p-item r up w3">
+      <div class="p-item-dot"></div>
+      <h3 class="p-item-name">The Earth as Teacher</h3>
+      <p class="p-item-text">A river doesn't rush because it's anxious. A tree doesn't grow to impress. The earth teaches patience, surrender, and beauty in imperfection.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ CTA ═══ -->
+<section class="cta-section" id="join">
+  <div class="cta-inner r up">
+    <div class="stag-label">Join the Community</div>
+    <h2 class="cta-title">Come as you are.<br><em>Leave different.</em></h2>
+    <p class="cta-sub">No perfection required. Just an open heart and a willingness to get your hands dirty. Join us for seasonal journeys rooted in faith and earth.</p>
+    <a href="#" class="cta-btn">Explore Programs</a>
+  </div>
+</section>
+
+<!-- ═══ Footer ═══ -->
+<footer>
+  <div class="ft">
+    <div class="ft-brand">
+      <img src="https://images.squarespace-cdn.com/content/v1/66307c0138a4f043bfe91c4c/c4817bc1-b19b-4ae8-94d1-7439b6dfd835/Recurso+10.png" alt="Fitrah Outdoors">
+      <p>Imperfect. Unhurried. Real. Outdoor experiences shaped by faith and grounded in earth.</p>
+    </div>
+    <div class="ft-col"><h4>Navigate</h4><ul><li><a href="#programs">Programs</a></li><li><a href="#principles">Principles</a></li><li><a href="#people">People</a></li></ul></div>
+    <div class="ft-col"><h4>Programs</h4><ul><li><a href="#">Sailing</a></li><li><a href="#">Farm Stays</a></li><li><a href="#">Horseback</a></li><li><a href="#">Homeschool</a></li></ul></div>
+    <div class="ft-col"><h4>Connect</h4><ul><li><a href="https://instagram.com/fitrahoutdoors" target="_blank">Instagram</a></li><li><a href="#">Contact</a></li><li><a href="#">Newsletter</a></li></ul></div>
+  </div>
+  <div class="ft-end"><p>&copy; 2026 Fitrah Outdoors</p></div>
+</footer>
+
+<script>
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); });
+  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+  document.querySelectorAll('.r').forEach(el => obs.observe(el));
+  const n = document.querySelector('.nav');
+  window.addEventListener('scroll', () => n.classList.toggle('stuck', scrollY > 50));
+</script>
+</body>
+</html>
